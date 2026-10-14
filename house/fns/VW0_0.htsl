@@ -1,0 +1,250 @@
+if (var ps == 0) {
+    teamvar V0_0_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_0_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_0_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_0_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_0_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_0_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_0_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_0_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 1) {
+    teamvar V0_1_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_1_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_1_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_1_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_1_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_1_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_1_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_1_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 2) {
+    teamvar V0_2_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_2_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_2_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_2_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_2_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_2_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_2_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_2_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 3) {
+    teamvar V0_3_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_3_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_3_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_3_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_3_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_3_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_3_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_3_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 4) {
+    teamvar V0_4_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_4_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_4_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_4_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_4_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_4_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_4_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_4_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 5) {
+    teamvar V0_5_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_5_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_5_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_5_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_5_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_5_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_5_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_5_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 6) {
+    teamvar V0_6_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_6_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_6_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_6_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_6_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_6_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_6_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_6_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 7) {
+    teamvar V0_7_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_7_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_7_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_7_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_7_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_7_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_7_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_7_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 8) {
+    teamvar V0_8_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_8_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_8_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_8_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_8_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_8_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_8_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_8_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 9) {
+    teamvar V0_9_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_9_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_9_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_9_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_9_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_9_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_9_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_9_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 10) {
+    teamvar V0_10_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_10_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_10_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_10_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_10_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_10_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_10_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_10_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 11) {
+    teamvar V0_11_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_11_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_11_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_11_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_11_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_11_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_11_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_11_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 12) {
+    teamvar V0_12_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_12_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_12_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_12_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_12_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_12_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_12_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_12_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 13) {
+    teamvar V0_13_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_13_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_13_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_13_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_13_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_13_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_13_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_13_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 14) {
+    teamvar V0_14_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_14_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_14_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_14_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_14_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_14_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_14_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_14_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 15) {
+    teamvar V0_15_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_15_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_15_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_15_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_15_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_15_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_15_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_15_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 16) {
+    teamvar V0_16_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_16_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_16_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_16_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_16_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_16_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_16_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_16_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 17) {
+    teamvar V0_17_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_17_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_17_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_17_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_17_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_17_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_17_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_17_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 18) {
+    teamvar V0_18_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_18_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_18_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_18_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_18_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_18_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_18_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_18_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 19) {
+    teamvar V0_19_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_19_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_19_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_19_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_19_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_19_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_19_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_19_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 20) {
+    teamvar V0_20_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_20_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_20_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_20_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_20_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_20_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_20_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_20_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 21) {
+    teamvar V0_21_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_21_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_21_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_21_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_21_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_21_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_21_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_21_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 22) {
+    teamvar V0_22_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_22_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_22_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_22_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_22_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_22_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_22_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_22_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 23) {
+    teamvar V0_23_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_23_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_23_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_23_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_23_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_23_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_23_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_23_7 T4 = %var.team/vp7 T1% false
+}
+if (var ps == 24) {
+    teamvar V0_24_0 T2 = %var.team/vp0 T1% false
+    teamvar V0_24_1 T3 = %var.team/vp1 T1% false
+    teamvar V0_24_2 T3 = %var.team/vp2 T1% false
+    teamvar V0_24_3 T3 = %var.team/vp3 T1% false
+    teamvar V0_24_4 T3 = %var.team/vp4 T1% false
+    teamvar V0_24_5 T3 = %var.team/vp5 T1% false
+    teamvar V0_24_6 T3 = %var.team/vp6 T1% false
+    teamvar V0_24_7 T4 = %var.team/vp7 T1% false
+}

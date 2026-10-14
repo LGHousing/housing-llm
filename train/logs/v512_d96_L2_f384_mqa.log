@@ -1,0 +1,66 @@
+heavy: queued (2 ahead, slots 3/3, 1.8 load per core)
+val: kept 10327/86977 pairs (0.119)
+train: kept 505629/4266263 pairs (0.119)
+params 243168  budget lhs 242688 <= 292800  dev mps
+step 1000 train 1.7119 val 1.7541 lr 3.00e-03 t 68s
+step 2000 train 1.6511 val 1.6492 lr 2.99e-03 t 135s
+step 3000 train 1.5537 val 1.6176 lr 2.98e-03 t 202s
+step 4000 train 1.6189 val 1.5979 lr 2.97e-03 t 269s
+step 5000 train 1.5692 val 1.5849 lr 2.95e-03 t 338s
+step 6000 train 1.5371 val 1.5780 lr 2.93e-03 t 389s
+step 7000 train 1.5000 val 1.5697 lr 2.91e-03 t 439s
+step 8000 train 1.5490 val 1.5641 lr 2.88e-03 t 492s
+step 9000 train 1.5289 val 1.5569 lr 2.85e-03 t 545s
+step 10000 train 1.5186 val 1.5547 lr 2.82e-03 t 595s
+step 11000 train 1.4777 val 1.5524 lr 2.78e-03 t 645s
+step 12000 train 1.4953 val 1.5462 lr 2.74e-03 t 697s
+step 13000 train 1.4701 val 1.5447 lr 2.70e-03 t 748s
+step 14000 train 1.5656 val 1.5426 lr 2.65e-03 t 798s
+step 15000 train 1.4875 val 1.5415 lr 2.60e-03 t 847s
+step 16000 train 1.5127 val 1.5373 lr 2.55e-03 t 897s
+step 17000 train 1.4887 val 1.5342 lr 2.50e-03 t 947s
+step 18000 train 1.5134 val 1.5347 lr 2.44e-03 t 996s
+step 19000 train 1.5105 val 1.5270 lr 2.39e-03 t 1047s
+step 20000 train 1.4317 val 1.5279 lr 2.33e-03 t 1086s
+step 21000 train 1.4233 val 1.5296 lr 2.26e-03 t 1107s
+step 22000 train 1.5619 val 1.5246 lr 2.20e-03 t 1127s
+step 23000 train 1.5019 val 1.5174 lr 2.13e-03 t 1148s
+step 24000 train 1.5079 val 1.5166 lr 2.07e-03 t 1167s
+step 25000 train 1.5017 val 1.5154 lr 2.00e-03 t 1185s
+step 26000 train 1.5052 val 1.5146 lr 1.93e-03 t 1203s
+step 27000 train 1.5036 val 1.5078 lr 1.86e-03 t 1221s
+step 28000 train 1.4825 val 1.5059 lr 1.79e-03 t 1239s
+step 29000 train 1.4772 val 1.5084 lr 1.72e-03 t 1257s
+step 30000 train 1.4488 val 1.5013 lr 1.65e-03 t 1275s
+step 31000 train 1.4869 val 1.4954 lr 1.58e-03 t 1292s
+step 32000 train 1.4858 val 1.4915 lr 1.51e-03 t 1311s
+step 33000 train 1.4870 val 1.4969 lr 1.44e-03 t 1330s
+step 34000 train 1.4700 val 1.4879 lr 1.37e-03 t 1352s
+step 35000 train 1.4184 val 1.4852 lr 1.30e-03 t 1374s
+step 36000 train 1.4576 val 1.4885 lr 1.23e-03 t 1394s
+step 37000 train 1.4625 val 1.4834 lr 1.17e-03 t 1415s
+step 38000 train 1.4285 val 1.4790 lr 1.10e-03 t 1437s
+step 39000 train 1.4309 val 1.4742 lr 1.04e-03 t 1458s
+step 40000 train 1.4869 val 1.4707 lr 9.75e-04 t 1479s
+step 41000 train 1.4905 val 1.4694 lr 9.15e-04 t 1499s
+step 42000 train 1.4573 val 1.4676 lr 8.56e-04 t 1519s
+step 43000 train 1.4240 val 1.4635 lr 8.00e-04 t 1537s
+step 44000 train 1.3918 val 1.4622 lr 7.47e-04 t 1556s
+step 45000 train 1.4393 val 1.4568 lr 6.95e-04 t 1576s
+step 46000 train 1.4064 val 1.4553 lr 6.47e-04 t 1596s
+step 47000 train 1.3784 val 1.4548 lr 6.01e-04 t 1616s
+step 48000 train 1.3941 val 1.4529 lr 5.58e-04 t 1634s
+step 49000 train 1.3954 val 1.4490 lr 5.18e-04 t 1653s
+step 50000 train 1.4057 val 1.4429 lr 4.81e-04 t 1670s
+step 51000 train 1.4241 val 1.4421 lr 4.47e-04 t 1688s
+step 52000 train 1.4161 val 1.4412 lr 4.17e-04 t 1706s
+step 53000 train 1.3703 val 1.4371 lr 3.90e-04 t 1723s
+step 54000 train 1.4074 val 1.4367 lr 3.66e-04 t 1740s
+step 55000 train 1.3892 val 1.4362 lr 3.46e-04 t 1758s
+step 56000 train 1.4199 val 1.4341 lr 3.30e-04 t 1777s
+step 57000 train 1.3990 val 1.4352 lr 3.17e-04 t 1795s
+step 58000 train 1.4393 val 1.4324 lr 3.07e-04 t 1813s
+step 59000 train 1.4110 val 1.4327 lr 3.02e-04 t 1831s
+step 60000 train 1.4004 val 1.4335 lr 3.00e-04 t 1848s
+numpy-reference greedy == torch greedy on 20/20 prompts
+DONE v512_d96_L2_f384_mqa best val 1.4341 time 1848s

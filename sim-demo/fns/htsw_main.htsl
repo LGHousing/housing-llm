@@ -1,0 +1,47 @@
+chat "Q: do you like music ?"
+function "Init"
+var done = 0 false
+var gen = 0 false
+if () {
+    var tok = 2 false
+    function "Run0"
+    function "Run1"
+}
+if () {
+    var tok = 3 false
+    function "Run0"
+    function "Run1"
+}
+if () {
+    var tok = 21 false
+    function "Run0"
+    function "Run1"
+}
+if () {
+    var tok = 18 false
+    function "Run0"
+    function "Run1"
+}
+if () {
+    var tok = 32 false
+    function "Run0"
+    function "Run1"
+}
+if () {
+    var tok = 379 false
+    function "Run0"
+    function "Run1"
+}
+if () {
+    var tok = 25 false
+    function "Run0"
+    function "Run1"
+}
+if () {
+    var tok = 4 false
+    var gen = 1 false
+    function "Run0"
+    function "Run1"
+}
+function "Gen_0"
+function "Gen_1"

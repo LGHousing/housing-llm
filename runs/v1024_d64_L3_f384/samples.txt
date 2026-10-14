@@ -1,0 +1,79 @@
+Q: do you like cats ?
+   (as tokens: do you like cats ?)
+A: i enjoy them , they are very nice and fun .
+
+Q: what is your name ?
+   (as tokens: what is your name ?)
+A: i remember a favorite book , and i enjoyed a nice walk .
+
+Q: how are you ?
+   (as tokens: how are you ?)
+A: i am doing well , thank you for asking .
+
+Q: what do you like to eat ?
+   (as tokens: what do you like to eat ?)
+A: i enjoy eating food and enjoying nature , it makes me feel happy .
+
+Q: do you want to play ?
+   (as tokens: do you want to play ?)
+A: that sounds like a fun idea , i am surprised by how easy it is .
+
+Q: what color is the sky ?
+   (as tokens: what color is the sky ?)
+A: the sky looks so bright and cheerful , don ' t you think ?
+
+Q: can you help me ?
+   (as tokens: can you help me ?)
+A: yes , i find that talking can help us feel better .
+
+Q: where do you live ?
+   (as tokens: where do you live ?)
+A: i will , i look forward to it and share it with you .
+
+Q: what is your favorite toy ?
+   (as tokens: what is your favorite toy ?)
+A: i enjoy painting , and watching the birds , it is very fun .
+
+Q: are you happy ?
+   (as tokens: are you happy ?)
+A: i enjoy it very much , it is a lovely day .
+
+Q: hello !
+   (as tokens: hello !)
+A: it is surprising how a small thing can make a big difference .
+
+Q: do you like music ?
+   (as tokens: do you like music ?)
+A: yes , i enjoy music , it makes me feel happy .
+
+Q: what makes you sad ?
+   (as tokens: what makes you sad ?)
+A: i find it hard to find joy in simple things .
+
+Q: do you have a friend ?
+   (as tokens: do you have a friend ?)
+A: i do have a friend to join you with your friend .
+
+Q: is it raining today ?
+   (as tokens: is it raining today ?)
+A: i do feel a bit gloomy today .
+
+Q: do you like school ?
+   (as tokens: do you like school ?)
+A: i enjoy school because it feels so special and fun .
+
+Q: what is your favorite food ?
+   (as tokens: what is your favorite food ?)
+A: i enjoy eating food and eating food , it makes me feel happy .
+
+Q: can you tell me a story ?
+   (as tokens: can you tell me a story ?)
+A: i did not know about it , but i am surprised by how much we can learn .
+
+Q: i feel sad today .
+   (as tokens: i feel sad today .)
+A: it is okay to feel sad sometimes , we all have those days .
+
+Q: good night !
+   (as tokens: good night !)
+A: it is a lovely thought to enjoy the night .

@@ -1,0 +1,16 @@
+heavy: queued (0 ahead, slots 4/3, 1.7 load per core)
+val: kept 10327/86977 pairs (0.119)
+train: kept 505629/4266263 pairs (0.119)
+params 243168  budget lhs 242688 <= 292800  dev mps
+step 1000 train 1.7113 val 1.7509 lr 3.00e-03 t 70s
+step 2000 train 1.6480 val 1.6521 lr 2.99e-03 t 136s
+step 3000 train 1.5585 val 1.6190 lr 2.98e-03 t 203s
+step 4000 train 1.6213 val 1.6010 lr 2.97e-03 t 266s
+step 5000 train 1.5773 val 1.5880 lr 2.95e-03 t 329s
+step 6000 train 1.5432 val 1.5814 lr 2.93e-03 t 391s
+step 7000 train 1.5122 val 1.5725 lr 2.91e-03 t 456s
+step 8000 train 1.5469 val 1.5642 lr 2.88e-03 t 520s
+step 9000 train 1.5360 val 1.5543 lr 2.85e-03 t 584s
+step 10000 train 1.5267 val 1.5551 lr 2.82e-03 t 649s
+step 11000 train 1.4826 val 1.5522 lr 2.78e-03 t 715s
+step 12000 train 1.4915 val 1.5519 lr 2.74e-03 t 778s

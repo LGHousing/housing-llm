@@ -1,0 +1,16 @@
+if (var gen == 1, var bi > 5, var bi < 460) {
+    var p = "%var.global/w" false
+    var q = "%var.player/p%%var.player/bi%%" false
+    var r = %var.player/q% false
+    chat "%var.player/r%"
+}
+if (var gen == 1, var bi >= 460) {
+    var p = "%var.team/w" false
+    var q = "%var.player/p%%var.player/bi%" false
+    var q = "%var.player/q% V%" false
+    var r = %var.player/q% false
+    chat "%var.player/r%"
+}
+if (var bi == 5) {
+    var done = 1 false
+}

@@ -1,0 +1,10 @@
+.venv/
+data/
+build/
+scaletest/
+dist/housing-llm 2/
+dist/*.zip
+__pycache__/
+.DS_Store
+dist/housing-llm/
+dist/housing-llm-sim/
