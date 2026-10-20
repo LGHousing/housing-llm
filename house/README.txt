@@ -1,76 +1,96 @@
 housing-llm: a ~260K-parameter chat transformer compiled to HTSW.
-300 functions (292 unchanged model functions + 8 chat helpers), ONE menu.
+300 functions (292 model functions, including 3 batched dispatchers, + 8 chat
+helpers), ONE menu, ONE command. No event handlers.
 
 KEYPAD CHAT
 
-Setup: teams T1..T10 and V must already exist; this import does not create them.
-Import house/import.json, including /llm and Player Join / Player Quit actions.
-Merge those events with any existing house actions rather than overwriting them.
-The old 44 menu names are listed exactly, one per line, in old-menu-names.txt.
-Delete those old menus before importing the replacement "LLM Keypad" menu.
+Teams T1..T10 and V must already exist. Import house/import.json and retain the
+house's own Join/Quit actions. This build neither supplies nor needs those events.
+The previous 44 menus are listed in old-menu-names.txt; IMPORT already removed
+them from guh. The remaining menu is "LLM Keypad".
 
-IN-GAME CHECK STILL REQUIRED: do custom-menu ITEM NAMES resolve placeholders
-again each time the menu opens? The suggestion items use names such as
-"1: %var.team/ui_s0 V%". Set ui_s0 on team V to hello, open the menu, change it
-and reopen. The simulator checks the word variables, not Minecraft rendering.
-If names remain literal, the same keypad still works: suggestions are numbered
-1..7 in chat and each item starts with its number. Static names "Suggestion 1"
-through "Suggestion 7" are the cleanest presentation fallback if needed.
+Players: /llm -> New Chat. Wait for "Choose words, then Send." Click letters to
+narrow the seven suggestions, then click a word on the bottom row to add it.
+Accepted words appear in chat. Wait for processing before selecting another.
+Backspace removes a letter; Clear letters clears the current prefix (shown on
+that button). These do not undo accepted words. Send prints the full reply,
+one word per line. There is no free-text box or multi-turn history.
 
-Players: /llm -> New Chat. Click letters to narrow the seven suggestions, then
-click a suggestion on the bottom row to add that word. The current letters and
-numbered suggestions are printed in chat every time they change. Each accepted
-word is echoed; after it is processed, the letters reset. Use Backspace to
-remove a letter or Clear letters to start a different prefix. These do not undo
-words already fed to the model. Click Send to generate the complete reply,
-one word per chat line. There is no free-text box.
+The alphabet uses oak letter heads, New Chat is blue, Send green, End Chat red.
+Suggestions show just the word. Five punctuation buttons offer ? . , ! and '.
+There is no <unk> button or item lore. All 501 alphabet words are reachable with
+at most three letters. Empty matches show dashes. Allow a quarter second between
+letter clicks because shared functions have a four-tick cooldown.
 
-The keypad includes all 26 letters, ?, ., comma, !, apostrophe and <unk>.
-Wait for the word to finish processing before choosing the next one, and allow
-suggestions to refresh between letter clicks (shared functions have a four-tick
-cooldown). Up to three letters suffice to reach every word. A prefix with no
-matches shows seven dashes; use Backspace or Clear letters to recover.
+Only one player can use the shared model at a time. New Chat ALWAYS starts over,
+including during loading/calculation or after another player's failure. End Chat
+ALWAYS releases it, including another player's abandoned question. Closing the
+menu alone keeps the question; /llm reopens it. A disconnected owner does not
+need to reconnect: anyone may use New Chat or End Chat. These controls deliberately
+allow players to cancel one another; use the house's access rules if needed.
 
-One player can chat at a time. End Chat releases an unfinished question;
-finishing a reply or leaving the house also releases it. Closing the menu alone
-keeps the question; /llm reopens it. An online player with an unfinished question
-holds the model until they Send, End Chat, or leave. New Chat starts over.
-There is no multi-turn conversation or undo for an already accepted word.
+Questions allow 16 words/punctuation marks, leaving room in the 48-token context.
+The conservative batch size takes about 14 seconds per model token at 20 ticks/s:
+New Chat takes about 30 seconds; replies take roughly 14 seconds per output word.
+Server load can make this longer. This is intended for the first live validation;
+the server's actual execution ceiling has not yet been measured.
 
-Questions allow 16 tokens, counting punctuation, leaving up to 29 calculation
-steps for a reply inside the 48-token context. Feed waits five ticks between
-Run0 and Run1 and another five before reuse. Reply stops at <eos> or the context
-limit. After joining, wait half a second before New Chat so old delayed work
-can drain.
+LIVE FAILURE AND RECOVERY
+
+IMPORT verified Init alone succeeds, but the old Run0 alone fails with Housing's
+generic execution error. That locates the failure in the model pass, rather than
+the keypad or lookup loader; it does not yet establish the precise server limit.
+Run0 and Run1 now run at most ten original calculation functions per invocation.
+Chat Next repeats every five ticks and runs exactly one batch. There are 29 Run0
+batches and 26 Run1 batches per token, followed by one completion tick.
+The exact 283/257 calculation calls and their order are preserved in
+model-passes.json. Only Run0, Run0_1 and Run1 changed among the original 292
+functions; the 289 initialization/math/output functions are unchanged.
+
+Feed enqueues a token instead of running a long chain. Loading uses 13 small
+lookup batches (20 assignments each), then Init_0, Init_1, Init_2 and Vocab on
+separate ticks. A version match skips lookup loading. Each batch marks itself
+in progress (ui_work=-1), then records success. If execution aborts before that
+marker, the next scheduler tick releases the chat and reports the failing phase
+and batch. New Chat and End Chat work even if that recovery tick never runs.
+There are no paused continuations that could resume an abandoned calculation.
+
+IMPORT: keep Chat Next repeating OFF until all changed functions are installed,
+then set its repeat interval to 5 ticks. The manifest carries repeatTicks=5.
+Before replacing an old build, clear global ui_owner to stop old work. Optional:
+set global ui_rev=0 to exercise the full loader. No per-player reset is required:
+New Chat resets ui_phase, ui_work, ui_part, gen, done and ui_n itself. End Chat
+also clears the owner and busy state. Team V ph_t="world" from the placeholder
+probe is unused and may be unset. Do not reset player variable 18469 or replace
+guh's existing Join/Quit events. Do not clear the model/team storage wholesale.
+
+IMPORT verified dynamic item-name placeholders refresh on menu reopen. Custom
+skull SNBT is supported by HTSW's vanilla ItemStack loader; its appearance in
+Housing still needs the fleet's live smoke test. Texture values and source links
+are stored in ref/letter-heads.json (Minecraft-Heads oak font / MCHeads mirror).
+If Housing strips skull textures, named paper letters are the closest fallback.
 
 GENERATED LOOKUP AND IMPORT SIZE
 
 Regenerate: python3 ref/build_chat.py
-The generator replaces house/chat and its entries in house/import.json.
-All 292 compiled model functions remain unchanged. Chat Load runs automatically
-on New Chat, loading the lookup once per generated version. There are 228
-prefix entries: empty prefix, 24 first letters, 130 second-letter prefixes and
-73 third-letter prefixes. Seven 9-bit vocabulary IDs fit into each 63-bit Long.
-Names such as "k1,108" match Housing's comma-formatted numeric placeholders;
-lookups use an L cast to recover the packed Long. Vocab word reads use the same
-dynamic lookup as the model's output. Missing entries become empty suggestions.
+The generator owns house/chat, its manifest entries, and the three dispatchers.
+When run after a fresh model compile it captures that model's original call order;
+subsequent regenerations use model-passes.json.
 
-Suggestions follow vocab order (frequency order, with pinned words at the end).
-If an exact word would be omitted, it replaces suggestion seven; this keeps the
-single-letter words "s" and "t" reachable. Third letters are generated only for
-crowded prefixes. All 501 words, five punctuation tokens and <unk> are selectable.
-The generator checks the team V byte budget: at most 2,241 bytes for its existing
-vocab strings, lookup, seven suggestion strings and current letters. UI scratch
-work reuses model scratch variables while the model is idle. A long accumulated
-sentence preview is omitted because Housing string substitution is limited.
+The lookup has 228 packed Longs: empty prefix, 24 first letters, 130 second-letter
+prefixes and 73 third-letter prefixes. Each Long holds seven 9-bit vocabulary IDs.
+Dynamic keys include Housing's thousands separators, e.g. k1,108; an L cast
+recovers each packed Long. Suggestions follow vocabulary order (frequency order
+with pinned evaluation words at the end). Exact short words replace the seventh
+suggestion when necessary. Team V storage is bounded at 2,241 bytes for its vocab,
+lookup, suggestion strings and current prefix. The UI reuses idle model scratch
+variables. Accepted-word echoes avoid Housing's short substitution-string limit.
 
-Expected import: 8 UI functions, 1 menu with 44 populated slots, 1 command and
-2 event handlers. Approximately 705 stored UI actions including conditionals:
-557 in functions (268 in Chat Load), 139 menu-click actions, 9 command/event
-actions. The original 292 model functions need no changes. Compare the old
-build's 7,246 menu-click actions alone. These counts are NOT HTSW work units;
-use the fleet's plan to estimate actual import time. There are no spare function
-slots at the house's 300-function limit.
+Expected total: 300 functions, 1 menu with 43 buttons, 1 command, no events.
+The UI has about 803 stored actions: 622 helper actions (335 in Chat Load),
+180 menu-click actions and 1 command action. The three model dispatchers contain
+764 actions. These counts include conditionals but NOT both branches executed;
+they are not fleet import work units. No additional function slots are needed.
 
 VALIDATION
 
@@ -79,23 +99,20 @@ On this shared box, use the test-slot scripts; do not run during import prep:
   /home/opc/light-lock.sh node build/tools/htsw.mjs check house/import.json
   /home/opc/heavy-lock.sh node sim/check-chat.mjs
 Set HTSW_ROOT and HTSW_SIM_ROOT if the read-only tool checkouts are elsewhere.
-The test drives actual keypad clicks and dynamic reads for every prefix, checks
-all word routes, backspace, empty results, the README reply, busy/ownership
-guards, context limit, and disconnect/rejoin. The current harness advances newly
-added timers in the same tick, so nested pause 5 can appear as four ticks; the
-test checks four-tick function cooldowns and Feed's declared five-tick waits.
-No tool source is patched. Menu-name rendering still needs the in-game check.
+The regression drives all prefixes via menu clicks, reproduces the example,
+checks every original model call in order, measures batch actions and timing,
+and tests input/context limits, cancellation, restart, missing success markers,
+and an absent owner's replacement with no Join/Quit events. It does not prove
+Housing's undocumented live limits or Minecraft item appearance.
 
 MANUAL MODEL INTERFACE (do not use concurrently with the chat UI)
 
-Setup: create teams T1..T10 and V in the house. Run "Init" once per conversation
-(zeroes the KV cache, loads the 512-entry vocab table into global + team V:
-506 ordinary word/punctuation tokens plus six special tokens).
+Init still initializes the model by itself. Run0 and Run1 now execute ONE BATCH,
+not a full pass. For a manual token: set tok, ui_part=0, ui_work=1. Run Run0 every
+five ticks until ui_work=2, then Run1 every five ticks until ui_work=3. Never run
+both in the same tick. Set gen=1 before processing <bot>=4; generated words copy
+their vocabulary ID into tok. Repeat complete passes until done=1 or pos=48.
+Use the chat UI for automatic scheduling.
 
-Per word: var tok = <word id> (vocab.json index), run "Run0", wait >= 5 ticks, run "Run1".
-Set var gen = 1 before the last prompt id (<bot> = 4): from then on Run1 prints each reply
-word in chat (dynamic read of the vocab table, no per-word conditionals) and copies it into
-tok, so just keep running Run0 / Run1. var done becomes 1 at <eos>. Context limit 48 tokens.
-
-Example: do you like cats ?  ->  ids 2 3 21 18 32 502 25 4
+Example: do you like cats ? -> ids 2 3 21 18 32 502 25 4
 Expected reply: i enjoy them , they make me feel happy .

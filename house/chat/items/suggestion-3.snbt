@@ -1,1 +1,1 @@
-{id:"minecraft:paper",Count:1b,tag:{display:{Name:"4: %var.team/ui_s3 V%",Lore:["Suggestion 4. The numbered list is also in chat."]}}}
+{id:"minecraft:book",Count:1b,Damage:0s,tag:{display:{Name:"§a%var.team/ui_s3 V%"}}}

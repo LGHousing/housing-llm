@@ -16,23 +16,24 @@ Both pass `htsw check`.
 
 `house/` setup: create teams `T1`..`T10` and `V` before use. Players open `/llm`,
 click **New Chat**, click letters on the single keypad, select a suggested word,
-then click **Send**. Suggestions and accepted words appear in chat; the answer
+then click **Send**. Accepted words appear in chat; the answer
 prints automatically. Backspace and Clear letters change the current prefix.
 One player can chat at a time, with up to 16 input words/punctuation marks.
 **End Chat** releases an unfinished question. See `house/README.txt` for setup,
-event import notes, limits, and the manual model interface.
+recovery and import notes, limits, and the manual model interface.
 
-The UI adds eight helpers, one 44-button menu, one command, and Join/Quit
-handlers; all 292 compiled model functions remain unchanged. The generated
-228-entry prefix table fits in existing team V storage. The UI has about 705
-stored actions; these are not HTSW import work units. Obsolete menus from the
-previous design are listed in `house/old-menu-names.txt`. Regenerate it with
+The UI adds eight helpers, one 43-button menu, and one command. It does not
+replace the house's Join/Quit events. New Chat and End Chat can recover any busy
+state, including an abandoned player's question. The model's three dispatchers
+now split each token into 55 batches, spaced five ticks apart; its 289 other
+functions are unchanged. This conservative first-live-test setting takes roughly
+14 seconds per token. The old full Run0 pass failed live; the exact Housing limit
+still needs measuring. The generated 228-entry lookup fits in team V storage.
+
+Letter buttons use oak letter heads; suggestion buttons show only the word.
+IMPORT verified that variable item names refresh in-game. Letter-head appearance
+and the newly split calculation still need a live smoke test. Regenerate with
 `python3 ref/build_chat.py` after building a matching model/vocabulary.
-
-**Still needs an in-game check:** whether menu item names resolve variable
-placeholders on reopening. Numbered suggestions also appear in chat, so the
-keypad works if the names stay literal. See `house/README.txt` for the probe
-and static-name fallback.
 
 Check the full build and reproduce the example through actual menu clicks:
 

@@ -1,10 +1,10 @@
-"""Generate the click-to-type UI without changing any compiled model functions.
+"""Generate the click-to-type UI and batched model dispatchers.
 
     python3 ref/build_chat.py [--house house]
 
 Vocabulary order is frequency order with pinned evaluation words at the end
 (train/train.py:build_vocab). Keep that order inside each prefix menu.
-Only house/chat and the UI entries in import.json are owned by this script.
+Owns house/chat, UI manifest entries, and Run0 / Run1 / Run0_1 dispatchers.
 """
 import argparse
 import hashlib
@@ -13,6 +13,7 @@ import json
 from pathlib import Path
 import re
 import shutil
+import uuid
 
 K = 7
 BITS = 9
@@ -73,8 +74,6 @@ def build(house):
                           and not (kind == "menus" and x["name"].startswith("LLM "))]
     assert not (set(FUNCTIONS) & {x["name"] for x in manifest["functions"]})
     assert not any(x["name"] == "llm" for x in manifest["commands"])
-    assert not any(x["event"] in ("Player Join", "Player Quit") for x in manifest["events"]), \
-        "Merge the existing Join/Quit actions instead of replacing them."
     assert len(manifest["functions"]) + len(FUNCTIONS) <= 300
     out = house / "chat"
     if out.exists():
@@ -86,8 +85,36 @@ def build(house):
         file.write_text(text.strip() + "\n")
         return "chat/" + name
 
-    def function(name, body):
-        manifest["functions"].append(dict(name=name, actions=write(f"fns/{name}.htsl", body)))
+    def function(name, body, repeat=None):
+        entry = dict(name=name, actions=write(f"fns/{name}.htsl", body))
+        if repeat is not None:
+            entry["repeatTicks"] = repeat
+        manifest["functions"].append(entry)
+
+    # Preserve the compiler's exact call order, changing only its dispatchers.
+    passes_file = house / "model-passes.json"
+    if not (house / "fns/Run0.htsl").read_text().startswith("// Batched"):
+        def calls(name):
+            result = []
+            for child in re.findall(r'function "([^"]+)"', (house / f"fns/{name}.htsl").read_text()):
+                result.extend(calls(child) if child.startswith("Run0_") else [child])
+            return result
+        passes_file.write_text(json.dumps({name: calls(name) for name in ("Run0", "Run1")}, indent=2) + "\n")
+    passes = json.loads(passes_file.read_text())
+    overflow = []
+    for phase, name in enumerate(("Run0", "Run1")):
+        sequence = passes[name]
+        chunks = [sequence[i:i + 10] for i in range(0, len(sequence), 10)]
+        lines = ["// Batched by ref/build_chat.py; call once per scheduler tick.", f"var ph = {phase} false"]
+        for i, chunk in enumerate(chunks):
+            block = [f"if (var ui_part == {i} 0" + (f", var ph == {phase}" if i >= 25 else "") + ") {"]
+            block += [f'    function "{fn}"' for fn in chunk]
+            block += [f"    var ui_part = {i + 1 if i + 1 < len(chunks) else 0} false",
+                      f"    var ui_work = {phase + 1 if i + 1 < len(chunks) else phase + 2} false", "    exit", "}"]
+            (lines if i < 25 else overflow).extend(block)
+        lines += ['function "Run0_1"']
+        (house / f"fns/{name}.htsl").write_text("\n".join(lines) + "\n")
+    (house / "fns/Run0_1.htsl").write_text("// Batched overflow for both model passes.\n" + "\n".join(overflow) + "\n")
 
     owner_guard = '''if (!globalvar ui_owner == "%player.name%" "") {
     chat "[LLM] Click New Chat to start. Only one player can chat at a time."
@@ -102,52 +129,30 @@ if (!var ui_phase == 0 5) {
 var ui_phase = 5 false
 var ui_work = 0 false'''
     release_indented = release.replace("\n", "\n    ")
-    function("Feed", f'''// One token takes 10 ticks: five between passes, five before reuse.
-{owner_guard}
-if (var ui_work == 1 0) {{
+    function("Feed", f'''{owner_guard}
+if (!var ui_work == 0 0) {{
     exit
 }}
 if or (var ui_phase < 1 0, var ui_phase > 4 0) {{
     exit
 }}
 if (var pos >= {CONTEXT}) {{
-    chat "[LLM] Context full. Click New Chat for another question."
+    chat "[LLM] Context full. Click New Chat."
     {release_indented}
     exit
 }}
+var ui_part = 0 false
 var ui_work = 1 false
-function "Run0"
-pause 5
-{owner_guard}
-function "Run1"
-pause 5
-{owner_guard}
-var ui_work = 0 false
-function "Chat Next"
 ''')
-    function("New Chat", '''if (var ui_work == 1 0) {
-    chat "[LLM] Please wait a moment before starting a new question."
-    exit
-}
-if (!globalvar ui_owner == "" "", !globalvar ui_owner == "%player.name%" "") {
-    chat "[LLM] Someone else is chatting. Try again when they finish."
-    exit
-}
-if (globalvar ui_owner == "%player.name%" "", var ui_phase > 0 0, var ui_phase < 5 0) {
-    chat "[LLM] Please wait for the current word or reply."
-    exit
-}
-globalvar ui_owner = "%player.name%" false
-var ui_phase = 1 false
+    # No pauses or queued work: restart/cancel can replace any failed phase.
+    function("New Chat", '''globalvar ui_owner = "%player.name%" false
+var ui_phase = 6 false
 var ui_work = 0 false
+var ui_part = 0 false
 var gen = 0 false
 var done = 0 false
 var ui_n = 0 false
-function "Chat Load"
-function "Init"
-var tok = 2 false
 chat "[LLM] Starting a new question..."
-function "Feed"
 ''')
     function("Reply", f'''{ready_guard}
 if (var pos <= 2) {{
@@ -161,10 +166,39 @@ var ui_phase = 4 false
 chat "[LLM] Reply:"
 function "Feed"
 ''')
-    # A delayed call chain, bounded by pos, rather than a synchronous loop.
-    # Functions return immediately when a nested function pauses, so all
-    # sequencing belongs here, after Feed's second five-tick pause.
-    function("Chat Next", f'''{owner_guard}
+    # The only scheduler. Each invocation does one small, synchronous batch.
+    # -1 is left behind if a batch aborts before its success marker.
+    function("Chat Next", f'''if (!globalvar ui_owner == "%player.name%" "") {{
+    exit
+}}
+if or (var ui_phase == 0 5, var ui_phase == 5 5) {{
+    exit
+}}
+if (var ui_work == -1) {{
+    chat "[LLM] Calculation stopped (phase %var.player/ph%, batch %var.player/ui_part%). Click New Chat."
+    {release_indented}
+    displayMenu "{ROOT}"
+    exit
+}}
+if (var ui_phase == 6) {{
+    var ui_work = -1 false
+    function "Chat Load"
+    exit
+}}
+if (var ui_work == 1) {{
+    var ui_work = -1 false
+    function "Run0"
+    exit
+}}
+if (var ui_work == 2) {{
+    var ui_work = -1 false
+    function "Run1"
+    exit
+}}
+if (!var ui_work == 3) {{
+    exit
+}}
+var ui_work = 0 false
 if (var ui_phase == 1) {{
     var tok = 3 false
     var ui_phase = 2 false
@@ -174,7 +208,7 @@ if (var ui_phase == 1) {{
 if (var ui_phase == 2) {{
     var done = 0 false
     var ui_phase = 0 false
-    chat "[LLM] Choose up to {max_input} words or punctuation marks, then Send."
+    chat "[LLM] Choose words, then Send."
     var ui_key = 0 false
     function "Chat Keys"
     exit
@@ -195,52 +229,58 @@ if (!var done == 1, var pos >= {CONTEXT}) {{
 }}
 if or (var done == 1, var pos >= {CONTEXT}) {{
     {release_indented}
-    chat "[LLM] Finished. Use /llm and New Chat for another question."
+    chat "[LLM] Finished. Use New Chat for another question."
     exit
 }}
 function "Feed"
-''')
+''', repeat=5)
     new_chat = write("actions/new.htsl", 'function "New Chat"')
     send = write("actions/send.htsl", '''function "Reply"
 if (var ui_phase == 4) {
     closeMenu
 }''')
-    end = write("actions/end.htsl", f'''{ready_guard}
+    end = write("actions/end.htsl", f'''
 {release}
 chat "[LLM] Chat released. Anyone can start a new question."
 closeMenu''')
     back = write("actions/root.htsl", f'displayMenu "{ROOT}"')
     manifest["commands"].append(dict(name="llm", mode="Self", requiredPriority=0,
         listed=True, actions=back))
-    manifest["events"].append(dict(event="Player Quit", actions=write("actions/quit.htsl", f'''
-if (globalvar ui_owner == "%player.name%" "") {{
-    {release_indented}
-}}''')))
-    # Wait out any paused work from a previous connection before permitting a
-    # fresh claim under the same player name. Do not rely on disconnect silently
-    # cancelling delayed actions (the harness, for example, does not do that).
-    manifest["events"].append(dict(event="Player Join", actions=write("actions/join.htsl", '''
-var ui_work = 1 false
-pause 10
-var ui_work = 0 false
-var ui_phase = 5 false''')))
+    if not manifest["events"]:
+        del manifest["events"]
 
-    def item(key, label, lore=(), material="paper"):
-        # JSON string quoting also produces valid SNBT string literals.
-        return write(f"items/{key}.snbt", '{id:"minecraft:' + material + '",Count:1b,tag:{display:{Name:'
-            + json.dumps(label) + ',Lore:' + json.dumps(list(lore)) + '}}}')
+    heads = json.loads(Path(__file__).with_name("letter-heads.json").read_text())
+    assert set(heads) == set(string.ascii_lowercase)
 
-    def slot(index, key, label, actions, lore=(), material="paper"):
-        return dict(slot=index, nbt=item(key, label, lore, material), actions=actions)
+    def item(key, label, material="paper", damage=0, letter=None):
+        tag = '{display:{Name:' + json.dumps(label, ensure_ascii=False) + '}'
+        if letter:
+            value = heads[letter]["value"]
+            owner = str(uuid.uuid5(uuid.NAMESPACE_URL, value))
+            tag += ',SkullOwner:{Id:' + json.dumps(owner) + ',Properties:{textures:[{Value:' + json.dumps(value) + '}]}}'
+        return write(f"items/{key}.snbt", '{id:"minecraft:' + material
+            + f'",Count:1b,Damage:{damage}s,tag:' + tag + '}}')
+
+    def slot(index, key, label, actions, material="paper", damage=0, letter=None):
+        return dict(slot=index, nbt=item(key, label, material, damage, letter), actions=actions)
 
     # All seven 9-bit token IDs fit in one nonnegative 63-bit Long.
     # Dynamic numeric placeholders have commas; L casts undo that formatting.
     loads = [f'teamvar "k{n:,}" V = {value} false' for n, value in packed.items()]
     loads += [f'globalvar ui_c{i} = "{c}" false' for i, c in enumerate(string.ascii_lowercase, 1)]
-    loader = [f"if (globalvar ui_rev == {version} 0) {{", "    exit", "}"]
-    for offset in range(0, len(loads), 25):
-        loader += ["if () {"] + ["    " + line for line in loads[offset:offset + 25]] + ["}"]
-    loader.append(f"globalvar ui_rev = {version} false")
+    batches = [loads[i:i + 20] for i in range(0, len(loads), 20)]
+    count = len(batches)
+    loader = [f"if (var ui_part == 0, globalvar ui_rev == {version} 0) {{",
+              f"    var ui_part = {count} false", "    var ui_work = 0 false", "    exit", "}"]
+    for i, batch in enumerate(batches):
+        loader += [f"if (var ui_part == {i}) {{"] + ["    " + line for line in batch]
+        if i + 1 == count:
+            loader += [f"    globalvar ui_rev = {version} false"]
+        loader += [f"    var ui_part = {i + 1} false", "    var ui_work = 0 false", "    exit", "}"]
+    for i, fn in enumerate(("Init_0", "Init_1", "Init_2", "Vocab"), count):
+        loader += [f"if (var ui_part == {i}) {{", f'    function "{fn}"',
+                   f"    var ui_part = {i + 1} false", "    var ui_work = 0 false", "    exit", "}"]
+    loader += ["var ui_phase = 1 false", "var tok = 2 false", "var ui_work = 0 false", 'function "Feed"']
     function("Chat Load", "\n".join(loader))
 
     keys = f'''{ready_guard}
@@ -309,8 +349,6 @@ if (var bi == 0) {{
     teamvar ui_s{i} V = "-" false
 }}
 ''' + lookup(f"teamvar ui_s{i} V")
-    show += 'chat "[LLM] Letters: %var.team/ui_p V%"\n'
-    show += 'chat "[LLM] ' + ' | '.join(f'{i+1}: %var.team/ui_s{i} V%' for i in range(K)) + '"\n'
     show += f'displayMenu "{ROOT}"'
     function("Chat Show", show)
 
@@ -337,32 +375,36 @@ function "Feed"
     function("Chat Pick", pick)
 
     slots = []
+    # Busy clicks must not consume Chat Keys' cooldown just before the scheduler
+    # uses it to refresh the menu after finishing a token.
+    key_guard = 'if (!var ui_phase == 0 5) {\n    exit\n}\n'
     for i, letter in enumerate(string.ascii_lowercase):
-        action = write(f"actions/key-{letter}.htsl", f'var ui_key = {i+1} false\nfunction "Chat Keys"')
-        slots.append(slot(i, "key-" + letter, letter.upper(), action, ["Add a letter to narrow the suggestions."]))
-    for i, value, label, key in [(27, -1, "Backspace", "backspace"), (28, -2, "Clear letters", "clear")]:
-        action = write(f"actions/{key}.htsl", f'var ui_key = {value} false\nfunction "Chat Keys"')
-        slots.append(slot(i, key, label, action, ["Changes the letters, not words already added."], "arrow"))
-    slots += [slot(30, "new", "New Chat", new_chat, material="book"),
-              slot(31, "send", "Send", send, material="emerald"),
-              slot(32, "end", "End Chat", end, material="barrier")]
+        action = write(f"actions/key-{letter}.htsl", key_guard + f'var ui_key = {i+1} false\nfunction "Chat Keys"')
+        slots.append(slot(i, "key-" + letter, "§f§l" + letter.upper(), action,
+                          material="skull", damage=3, letter=letter))
+    for i, value, label, key in [(26, -1, "§eBackspace", "backspace"),
+                                  (27, -2, "§eClear letters: §f%var.team/ui_p V%", "clear")]:
+        action = write(f"actions/{key}.htsl", key_guard + f'var ui_key = {value} false\nfunction "Chat Keys"')
+        slots.append(slot(i, key, label, action, material="arrow"))
+    slots += [slot(30, "new", "§b§lNew Chat", new_chat, material="diamond"),
+              slot(32, "send", "§a§lSend", send, material="emerald"),
+              slot(35, "end", "§c§lEnd Chat", end, material="barrier")]
     punctuation = {}
-    for i, word in enumerate(("?", ".", ",", "!", "'", "<unk>"), 36):
+    for i, word in enumerate(("?", ".", ",", "!", "'"), 38):
         token = vocab.index(word)
         # Guard before setting tok: a punctuation click during Run0/Run1 must
         # never change the model input while Chat Pick rejects the busy click.
         action = write(f"actions/token-{token}.htsl", ready_guard + f'\nvar ui_key = -1 false\nvar tok = {token} false\nfunction "Chat Pick"')
-        slots.append(slot(i, f"token-{token}", word, action))
+        slots.append(slot(i, f"token-{token}", "§f§l" + word, action))
         punctuation[word] = i
     for i in range(K):
         action = write(f"actions/pick-{i}.htsl", f'var ui_key = {i} false\nfunction "Chat Pick"')
-        slots.append(slot(45 + i, f"suggestion-{i}", f"{i+1}: %var.team/ui_s{i} V%", action,
-            [f"Suggestion {i+1}. The numbered list is also in chat."]))
+        slots.append(slot(46 + i, f"suggestion-{i}", f"§a%var.team/ui_s{i} V%", action, material="book"))
     manifest["menus"].append(dict(name=ROOT, size=6, slots=slots))
     (house / "import.json").write_text(json.dumps(manifest, indent=1) + "\n")
     write("routes.json", json.dumps(dict(root=ROOT, maxInput=max_input, context=CONTEXT,
-        routes=routes, new=30, send=31, end=32, backspace=27, clear=28,
-        punctuation=punctuation, suggestionStart=45, prefixDepth=depth,
+        routes=routes, new=30, send=32, end=35, backspace=26, clear=27,
+        punctuation=punctuation, suggestionStart=46, prefixDepth=depth,
         prefixes=prefixes, version=version, teamVBytes=v_bytes), indent=2))
     print(f'{len(manifest["functions"])} functions, {len(manifest["menus"])} menu; '
           f'{len(prefixes)} prefix entries, {depth} letters max; team V <= {v_bytes} bytes')

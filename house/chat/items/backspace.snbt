@@ -1,1 +1,1 @@
-{id:"minecraft:arrow",Count:1b,tag:{display:{Name:"Backspace",Lore:["Changes the letters, not words already added."]}}}
+{id:"minecraft:arrow",Count:1b,Damage:0s,tag:{display:{Name:"§eBackspace"}}}

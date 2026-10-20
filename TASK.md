@@ -68,7 +68,35 @@ reply. Report UI action counts and obsolete menu names. Menu-name placeholder
 rendering requires an in-game check; include numbered chat suggestions as the
 fallback. Work stays on feat/chat-ui, pushed without merge or live import.
 
+## Live failure fix acceptance (2026-10-20)
+
+IMPORT reproduced the error with Run0 alone, after Init alone succeeded.
+Split both model passes into small scheduled batches, preserve their exact math
+call order, and make New Chat/End Chat cancel any phase without Join/Quit events.
+Keep 300 functions / one menu; add A-Z letter heads, word-only suggestions,
+remove <unk> and unnecessary item subtitles. Check full HTSL and README reply,
+including mid-load/mid-pass cancellation and simulated abort recovery. Push the
+same branch; IMPORT handles live smoke testing and existing event actions.
+
 ## Ledger
+
+- 2026-10-20: IMPORT reproduced the live failure in standalone Run0; Init alone
+  succeeds. Replaced only Run0 / Run0_1 / Run1 dispatchers with ten-function
+  batches, driven by Chat Next every five ticks. Original 283/257 calls remain
+  in exact order; all 289 other model functions are byte-identical. Lookup and
+  initialization now load over separate ticks. Feed enqueues work; there are no
+  paused continuations. New/End always replace or release the shared owner;
+  a missing batch success marker releases it on the next tick. Removed our
+  Join/Quit events entirely. Added oak A-Z skull textures, coloured controls,
+  word-only suggestions; removed <unk> and lore. Placeholder names were verified
+  live by IMPORT. Full htsw check and simulator pass: README reply unchanged,
+  all prefix/word routes, original math call order, five-tick batch spacing,
+  maximum 6,553 actions in a tested tick, cancellation/restart during loading
+  and calculation, aborted-batch recovery and replacement of an absent owner.
+  Generator is reproducible. Build remains 300 functions / one 43-button menu /
+  one command, no events. About 803 UI actions and 764 dispatcher actions.
+  Nominal processing is 14 seconds/token. Exact server ceiling and skull
+  appearance need IMPORT's live check; no live imports performed here.
 
 - 2026-10-20: Replaced the cancelled 44-menu import with one 44-button keypad.
   Build now has 300 functions: original 292 unchanged plus Feed, Reply, New Chat,

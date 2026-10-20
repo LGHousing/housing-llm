@@ -125,6 +125,4 @@ if (var bi >= 460) {
     var q = "%var.player/q% V%" false
     teamvar ui_s6 V = %var.player/q% false
 }
-chat "[LLM] Letters: %var.team/ui_p V%"
-chat "[LLM] 1: %var.team/ui_s0 V% | 2: %var.team/ui_s1 V% | 3: %var.team/ui_s2 V% | 4: %var.team/ui_s3 V% | 5: %var.team/ui_s4 V% | 6: %var.team/ui_s5 V% | 7: %var.team/ui_s6 V%"
 displayMenu "LLM Keypad"

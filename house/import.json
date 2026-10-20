@@ -1182,7 +1182,8 @@
   },
   {
    "name": "Chat Next",
-   "actions": "chat/fns/Chat Next.htsl"
+   "actions": "chat/fns/Chat Next.htsl",
+   "repeatTicks": 5
   },
   {
    "name": "Chat Load",
@@ -1337,12 +1338,12 @@
      "actions": "chat/actions/key-z.htsl"
     },
     {
-     "slot": 27,
+     "slot": 26,
      "nbt": "chat/items/backspace.snbt",
      "actions": "chat/actions/backspace.htsl"
     },
     {
-     "slot": 28,
+     "slot": 27,
      "nbt": "chat/items/clear.snbt",
      "actions": "chat/actions/clear.htsl"
     },
@@ -1352,77 +1353,72 @@
      "actions": "chat/actions/new.htsl"
     },
     {
-     "slot": 31,
+     "slot": 32,
      "nbt": "chat/items/send.snbt",
      "actions": "chat/actions/send.htsl"
     },
     {
-     "slot": 32,
+     "slot": 35,
      "nbt": "chat/items/end.snbt",
      "actions": "chat/actions/end.htsl"
     },
     {
-     "slot": 36,
+     "slot": 38,
      "nbt": "chat/items/token-25.snbt",
      "actions": "chat/actions/token-25.htsl"
     },
     {
-     "slot": 37,
+     "slot": 39,
      "nbt": "chat/items/token-6.snbt",
      "actions": "chat/actions/token-6.htsl"
     },
     {
-     "slot": 38,
+     "slot": 40,
      "nbt": "chat/items/token-7.snbt",
      "actions": "chat/actions/token-7.htsl"
     },
     {
-     "slot": 39,
+     "slot": 41,
      "nbt": "chat/items/token-501.snbt",
      "actions": "chat/actions/token-501.htsl"
     },
     {
-     "slot": 40,
+     "slot": 42,
      "nbt": "chat/items/token-56.snbt",
      "actions": "chat/actions/token-56.htsl"
     },
     {
-     "slot": 41,
-     "nbt": "chat/items/token-1.snbt",
-     "actions": "chat/actions/token-1.htsl"
-    },
-    {
-     "slot": 45,
+     "slot": 46,
      "nbt": "chat/items/suggestion-0.snbt",
      "actions": "chat/actions/pick-0.htsl"
     },
     {
-     "slot": 46,
+     "slot": 47,
      "nbt": "chat/items/suggestion-1.snbt",
      "actions": "chat/actions/pick-1.htsl"
     },
     {
-     "slot": 47,
+     "slot": 48,
      "nbt": "chat/items/suggestion-2.snbt",
      "actions": "chat/actions/pick-2.htsl"
     },
     {
-     "slot": 48,
+     "slot": 49,
      "nbt": "chat/items/suggestion-3.snbt",
      "actions": "chat/actions/pick-3.htsl"
     },
     {
-     "slot": 49,
+     "slot": 50,
      "nbt": "chat/items/suggestion-4.snbt",
      "actions": "chat/actions/pick-4.htsl"
     },
     {
-     "slot": 50,
+     "slot": 51,
      "nbt": "chat/items/suggestion-5.snbt",
      "actions": "chat/actions/pick-5.htsl"
     },
     {
-     "slot": 51,
+     "slot": 52,
      "nbt": "chat/items/suggestion-6.snbt",
      "actions": "chat/actions/pick-6.htsl"
     }
@@ -1436,16 +1432,6 @@
    "requiredPriority": 0,
    "listed": true,
    "actions": "chat/actions/root.htsl"
-  }
- ],
- "events": [
-  {
-   "event": "Player Quit",
-   "actions": "chat/actions/quit.htsl"
-  },
-  {
-   "event": "Player Join",
-   "actions": "chat/actions/join.htsl"
   }
  ]
 }

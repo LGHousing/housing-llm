@@ -2009,19 +2009,18 @@
     }
   },
   "new": 30,
-  "send": 31,
-  "end": 32,
-  "backspace": 27,
-  "clear": 28,
+  "send": 32,
+  "end": 35,
+  "backspace": 26,
+  "clear": 27,
   "punctuation": {
-    "?": 36,
-    ".": 37,
-    ",": 38,
-    "!": 39,
-    "'": 40,
-    "<unk>": 41
+    "?": 38,
+    ".": 39,
+    ",": 40,
+    "!": 41,
+    "'": 42
   },
-  "suggestionStart": 45,
+  "suggestionStart": 46,
   "prefixDepth": 3,
   "prefixes": {
     "": [

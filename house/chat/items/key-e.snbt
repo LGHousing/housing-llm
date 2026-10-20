@@ -1,1 +1,1 @@
-{id:"minecraft:paper",Count:1b,tag:{display:{Name:"E",Lore:["Add a letter to narrow the suggestions."]}}}
+{id:"minecraft:skull",Count:1b,Damage:3s,tag:{display:{Name:"§f§lE"},SkullOwner:{Id:"f626a7b8-babd-57c5-9abf-80124a391852",Properties:{textures:[{Value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGJiMjczN2VjYmY5MTBlZmUzYjI2N2RiN2Q0YjMyN2YzNjBhYmM3MzJjNzdiZDBlNGVmZjFkNTEwY2RlZiJ9fX0="}]}}}}

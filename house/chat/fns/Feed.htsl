@@ -1,33 +1,19 @@
-// One token takes 10 ticks: five between passes, five before reuse.
 if (!globalvar ui_owner == "%player.name%" "") {
     chat "[LLM] Click New Chat to start. Only one player can chat at a time."
     exit
 }
-if (var ui_work == 1 0) {
+if (!var ui_work == 0 0) {
     exit
 }
 if or (var ui_phase < 1 0, var ui_phase > 4 0) {
     exit
 }
 if (var pos >= 48) {
-    chat "[LLM] Context full. Click New Chat for another question."
+    chat "[LLM] Context full. Click New Chat."
     globalvar ui_owner = "" false
     var ui_phase = 5 false
     var ui_work = 0 false
     exit
 }
+var ui_part = 0 false
 var ui_work = 1 false
-function "Run0"
-pause 5
-if (!globalvar ui_owner == "%player.name%" "") {
-    chat "[LLM] Click New Chat to start. Only one player can chat at a time."
-    exit
-}
-function "Run1"
-pause 5
-if (!globalvar ui_owner == "%player.name%" "") {
-    chat "[LLM] Click New Chat to start. Only one player can chat at a time."
-    exit
-}
-var ui_work = 0 false
-function "Chat Next"

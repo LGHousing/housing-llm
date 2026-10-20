@@ -1,5 +1,6 @@
+// Batched by ref/build_chat.py; call once per scheduler tick.
 var ph = 0 false
-if () {
+if (var ui_part == 0 0) {
     function "Emb_0"
     function "Emb_1"
     function "Emb_2"
@@ -10,8 +11,11 @@ if () {
     function "Emb_7"
     function "Emb_8"
     function "Emb_9"
+    var ui_part = 1 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 1 0) {
     function "Emb_10"
     function "Emb_11"
     function "Emb_12"
@@ -22,8 +26,11 @@ if () {
     function "Emb_17"
     function "Emb_18"
     function "Emb_19"
+    var ui_part = 2 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 2 0) {
     function "Emb_20"
     function "F000"
     function "F001"
@@ -34,8 +41,11 @@ if () {
     function "F006"
     function "F007"
     function "F008"
+    var ui_part = 3 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 3 0) {
     function "F009"
     function "F010"
     function "F011"
@@ -46,8 +56,11 @@ if () {
     function "F016"
     function "F017"
     function "F018"
+    var ui_part = 4 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 4 0) {
     function "F019"
     function "F020"
     function "F021"
@@ -58,8 +71,11 @@ if () {
     function "F026"
     function "F027"
     function "F028"
+    var ui_part = 5 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 5 0) {
     function "F029"
     function "F030"
     function "KW0_0"
@@ -70,8 +86,11 @@ if () {
     function "F033"
     function "F034"
     function "F035"
+    var ui_part = 6 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 6 0) {
     function "F036"
     function "F037"
     function "F038"
@@ -82,8 +101,11 @@ if () {
     function "F043"
     function "F044"
     function "F045"
+    var ui_part = 7 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 7 0) {
     function "F046"
     function "F047"
     function "F048"
@@ -94,8 +116,11 @@ if () {
     function "F053"
     function "F054"
     function "F055"
+    var ui_part = 8 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 8 0) {
     function "F056"
     function "F057"
     function "F058"
@@ -106,8 +131,11 @@ if () {
     function "F063"
     function "F064"
     function "F065"
+    var ui_part = 9 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 9 0) {
     function "F066"
     function "F067"
     function "F068"
@@ -118,8 +146,11 @@ if () {
     function "F073"
     function "F074"
     function "F075"
+    var ui_part = 10 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 10 0) {
     function "F076"
     function "F077"
     function "F078"
@@ -130,8 +161,11 @@ if () {
     function "F083"
     function "F084"
     function "F085"
+    var ui_part = 11 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 11 0) {
     function "F086"
     function "F087"
     function "F088"
@@ -142,8 +176,11 @@ if () {
     function "F093"
     function "F094"
     function "F095"
+    var ui_part = 12 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 12 0) {
     function "F096"
     function "F097"
     function "F098"
@@ -154,8 +191,11 @@ if () {
     function "F103"
     function "F104"
     function "F105"
+    var ui_part = 13 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 13 0) {
     function "F106"
     function "F107"
     function "F108"
@@ -166,8 +206,11 @@ if () {
     function "F113"
     function "F114"
     function "F115"
+    var ui_part = 14 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 14 0) {
     function "F116"
     function "F117"
     function "F118"
@@ -178,8 +221,11 @@ if () {
     function "F123"
     function "F124"
     function "F125"
+    var ui_part = 15 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 15 0) {
     function "F126"
     function "F127"
     function "F128"
@@ -190,8 +236,11 @@ if () {
     function "F133"
     function "F134"
     function "F135"
+    var ui_part = 16 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 16 0) {
     function "F136"
     function "F137"
     function "F138"
@@ -202,8 +251,11 @@ if () {
     function "F143"
     function "F144"
     function "F145"
+    var ui_part = 17 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 17 0) {
     function "F146"
     function "F147"
     function "F148"
@@ -214,8 +266,11 @@ if () {
     function "F153"
     function "F154"
     function "F155"
+    var ui_part = 18 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 18 0) {
     function "F156"
     function "F157"
     function "F158"
@@ -226,8 +281,11 @@ if () {
     function "F163"
     function "F164"
     function "F165"
+    var ui_part = 19 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 19 0) {
     function "F166"
     function "F167"
     function "F168"
@@ -238,8 +296,11 @@ if () {
     function "F173"
     function "F174"
     function "F175"
+    var ui_part = 20 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 20 0) {
     function "F176"
     function "F177"
     function "F178"
@@ -250,8 +311,11 @@ if () {
     function "F183"
     function "F184"
     function "F185"
+    var ui_part = 21 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 21 0) {
     function "F186"
     function "F187"
     function "F188"
@@ -262,8 +326,11 @@ if () {
     function "F193"
     function "F194"
     function "F195"
+    var ui_part = 22 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 22 0) {
     function "F196"
     function "F197"
     function "F198"
@@ -274,8 +341,11 @@ if () {
     function "F203"
     function "F204"
     function "F205"
+    var ui_part = 23 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 23 0) {
     function "F206"
     function "F207"
     function "F208"
@@ -286,8 +356,11 @@ if () {
     function "F213"
     function "F214"
     function "F215"
+    var ui_part = 24 false
+    var ui_work = 1 false
+    exit
 }
-if () {
+if (var ui_part == 24 0) {
     function "F216"
     function "F217"
     function "F218"
@@ -298,14 +371,8 @@ if () {
     function "F223"
     function "F224"
     function "F225"
+    var ui_part = 25 false
+    var ui_work = 1 false
+    exit
 }
-function "F226"
-function "F227"
-function "F228"
-function "F229"
-function "F230"
-function "F231"
-function "F232"
-function "F233"
-function "F234"
 function "Run0_1"

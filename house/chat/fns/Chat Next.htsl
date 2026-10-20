@@ -1,7 +1,36 @@
 if (!globalvar ui_owner == "%player.name%" "") {
-    chat "[LLM] Click New Chat to start. Only one player can chat at a time."
     exit
 }
+if or (var ui_phase == 0 5, var ui_phase == 5 5) {
+    exit
+}
+if (var ui_work == -1) {
+    chat "[LLM] Calculation stopped (phase %var.player/ph%, batch %var.player/ui_part%). Click New Chat."
+    globalvar ui_owner = "" false
+    var ui_phase = 5 false
+    var ui_work = 0 false
+    displayMenu "LLM Keypad"
+    exit
+}
+if (var ui_phase == 6) {
+    var ui_work = -1 false
+    function "Chat Load"
+    exit
+}
+if (var ui_work == 1) {
+    var ui_work = -1 false
+    function "Run0"
+    exit
+}
+if (var ui_work == 2) {
+    var ui_work = -1 false
+    function "Run1"
+    exit
+}
+if (!var ui_work == 3) {
+    exit
+}
+var ui_work = 0 false
 if (var ui_phase == 1) {
     var tok = 3 false
     var ui_phase = 2 false
@@ -11,7 +40,7 @@ if (var ui_phase == 1) {
 if (var ui_phase == 2) {
     var done = 0 false
     var ui_phase = 0 false
-    chat "[LLM] Choose up to 16 words or punctuation marks, then Send."
+    chat "[LLM] Choose words, then Send."
     var ui_key = 0 false
     function "Chat Keys"
     exit
@@ -34,7 +63,7 @@ if or (var done == 1, var pos >= 48) {
     globalvar ui_owner = "" false
     var ui_phase = 5 false
     var ui_work = 0 false
-    chat "[LLM] Finished. Use /llm and New Chat for another question."
+    chat "[LLM] Finished. Use New Chat for another question."
     exit
 }
 function "Feed"
