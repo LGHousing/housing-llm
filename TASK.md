@@ -59,6 +59,20 @@ Examples that fit: V=512,d=96,L=2,f=384 (~270K); V=768,d=80,L=3,f=256 (~260K).
 
 ## Ledger
 
+- 2026-10-20: Callan-approved click-to-type UI on `feat/chat-ui`. `ref/build_chat.py`
+  adds 4 functions (296 total), 44 menus, `/llm`, and Join/Quit guards to `house/`;
+  all 292 original functions and their import entries are unchanged. Letter menus
+  retain vocab order; S (61) and W (42) split into second-letter menus at cap 40.
+  New Chat feeds BOS/USER; Feed uses two five-tick pauses; Send feeds BOT and
+  repeats through EOS or position 48. One shared conversation, 16-token input
+  cap, sentence preview in team V, End Chat/disconnect release, reconnect delay.
+  Full `htsw check` passes. `sim/check-chat.mjs` clicks the README question and
+  reproduces `i enjoy them , they make me feel happy .`; all 507 selectable-token
+  routes, busy/ownership guards, empty Send, question/context bounds, and
+  disconnect/rejoin checks pass. Tools are bundled locally from read-only HTSW
+  and harness sources. Harness nested timers can advance one tick early; checks
+  enforce its four-tick function cooldown and the declared five-tick waits.
+  Live import/smoke test belongs to IMPORT; teams T1..T10 and V must exist.
 - 2026-10-02: spec written. Helper A (training), helper B (simulator scale test) dispatched.
 - 2026-10-02: storage math. KV cache is stored as 3 x 21-bit lanes per Long (8 B per 3 values). With MHA d=96 L=2 that is 1,024 B per context token, so ctx ~24 fits in ~16 holders x 2.5 KB. Multi-query attention (n_kv_heads=1) cuts it 4x (ctx 64 ~ 17 KB). Plan: if helper A's runs are MHA, ask for one MQA retrain after it finishes (never message it mid-run).
 - 2026-10-02: Integer design (ref/intmodel.py is the spec): int8 weights per-row scale, RMSNorm gain folded into following matmul, normalized activations int8 via Q16 residual / Newton isqrt, matmuls as exact int dot products (SWAR lanes are exact when per-row bounds fit 21 bits; compiler asserts and chunk-flushes), exp by 10 squarings in Q30, attention probs as 0..255 ints, branchless argmax (first max wins).

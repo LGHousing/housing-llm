@@ -1,0 +1,4 @@
+var ui_work = 1 false
+pause 10
+var ui_work = 0 false
+var ui_phase = 5 false

@@ -1,0 +1,4 @@
+function "Reply"
+if (var ui_phase == 4) {
+    closeMenu
+}

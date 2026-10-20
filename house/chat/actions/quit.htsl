@@ -1,0 +1,5 @@
+if (globalvar ui_owner == "%player.name%" "") {
+    globalvar ui_owner = "" false
+    var ui_phase = 5 false
+    var ui_work = 0 false
+}

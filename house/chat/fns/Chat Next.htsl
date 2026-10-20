@@ -1,0 +1,38 @@
+if (!globalvar ui_owner == "%player.name%" "") {
+    chat "[LLM] Click New Chat to start. Only one player can chat at a time."
+    exit
+}
+if (var ui_phase == 1) {
+    var tok = 3 false
+    var ui_phase = 2 false
+    function "Feed"
+    exit
+}
+if (var ui_phase == 2) {
+    var done = 0 false
+    var ui_phase = 0 false
+    chat "[LLM] Choose up to 16 words or punctuation marks, then Send."
+    displayMenu "LLM Words"
+    exit
+}
+if (var ui_phase == 3) {
+    var done = 0 false
+    var ui_phase = 0 false
+    chat "[LLM] You:%var.team/ui_q V%"
+    displayMenu "LLM Words"
+    exit
+}
+if (!var ui_phase == 4) {
+    exit
+}
+if (!var done == 1, var pos >= 48) {
+    chat "[LLM] Reply stopped at the context limit."
+}
+if or (var done == 1, var pos >= 48) {
+    globalvar ui_owner = "" false
+    var ui_phase = 5 false
+    var ui_work = 0 false
+    chat "[LLM] Finished. Use /llm and New Chat for another question."
+    exit
+}
+function "Feed"

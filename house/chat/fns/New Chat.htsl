@@ -1,0 +1,22 @@
+if (var ui_work == 1 0) {
+    chat "[LLM] Please wait a moment before starting a new question."
+    exit
+}
+if (!globalvar ui_owner == "" "", !globalvar ui_owner == "%player.name%" "") {
+    chat "[LLM] Someone else is chatting. Try again when they finish."
+    exit
+}
+if (globalvar ui_owner == "%player.name%" "", var ui_phase > 0 0, var ui_phase < 5 0) {
+    chat "[LLM] Please wait for the current word or reply."
+    exit
+}
+globalvar ui_owner = "%player.name%" false
+var ui_phase = 1 false
+var ui_work = 0 false
+var gen = 0 false
+var done = 0 false
+teamvar ui_q V = "" false
+function "Init"
+var tok = 2 false
+chat "[LLM] Starting a new question..."
+function "Feed"
