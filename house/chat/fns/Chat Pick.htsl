@@ -1,0 +1,37 @@
+if (!globalvar ui_owner == "%player.name%" "") {
+    chat "[LLM] Click New Chat to start. Only one player can chat at a time."
+    exit
+}
+if (!var ui_phase == 0 5) {
+    chat "[LLM] Please wait for the current word or reply."
+    exit
+}
+if (var pos >= 18) {
+    chat "[LLM] Question full. Click Send or New Chat."
+    exit
+}
+if (var ui_key >= 0) {
+    var tok = %var.player/ui_pack% false
+    var ui_key *= 9 false
+    var tok >>= %var.player/ui_key% false
+    var tok &= 511 false
+}
+if (var tok == 0) {
+    chat "[LLM] No word in that slot. Try Backspace or Clear letters."
+    exit
+}
+var bi = %var.player/tok% false
+if (var bi < 460, var bi > 0) {
+    var p = "%var.global/w" false
+    var q = "%var.player/p%%var.player/bi%%" false
+    var r = %var.player/q% false
+}
+if (var bi >= 460) {
+    var p = "%var.team/w" false
+    var q = "%var.player/p%%var.player/bi%" false
+    var q = "%var.player/q% V%" false
+    var r = %var.player/q% false
+}
+chat "[LLM] Added: %var.player/r%"
+var ui_phase = 3 false
+function "Feed"

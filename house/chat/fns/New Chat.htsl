@@ -15,7 +15,8 @@ var ui_phase = 1 false
 var ui_work = 0 false
 var gen = 0 false
 var done = 0 false
-teamvar ui_q V = "" false
+var ui_n = 0 false
+function "Chat Load"
 function "Init"
 var tok = 2 false
 chat "[LLM] Starting a new question..."

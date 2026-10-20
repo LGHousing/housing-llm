@@ -1,0 +1,71 @@
+if (!globalvar ui_owner == "%player.name%" "") {
+    chat "[LLM] Click New Chat to start. Only one player can chat at a time."
+    exit
+}
+if (!var ui_phase == 0 5) {
+    chat "[LLM] Please wait for the current word or reply."
+    exit
+}
+if (var ui_key > 0, var ui_n >= 729) {
+    chat "[LLM] Choose a suggestion, Backspace, or Clear letters."
+    exit
+}
+if (var ui_key > 0) {
+    var ui_n *= 27 false
+    var ui_n += %var.player/ui_key% false
+}
+if (var ui_key == -1) {
+    var ui_n /= 27 false
+}
+if (var ui_key == -2) {
+    var ui_n = 0 false
+}
+var p = "%var.team/k" false
+var q = "%var.player/p%%var.player/ui_n%" false
+var q = "%var.player/q% V%L" false
+var ui_pack = %var.player/q% false
+if (var ui_pack == "L") {
+    var ui_pack = 0 false
+}
+teamvar ui_p V = "" false
+var t = %var.player/ui_n% false
+if () {
+    var m = %var.player/t% false
+    var t /= 27 false
+    var u = %var.player/t% false
+    var u *= 27 false
+    var m -= %var.player/u% false
+}
+if (var m > 0) {
+    var p = "%var.global/ui_c" false
+    var q = "%var.player/p%%var.player/m%%" false
+    var r = %var.player/q% false
+    teamvar ui_p V = "%var.player/r%%var.team/ui_p V%" false
+}
+if () {
+    var m = %var.player/t% false
+    var t /= 27 false
+    var u = %var.player/t% false
+    var u *= 27 false
+    var m -= %var.player/u% false
+}
+if (var m > 0) {
+    var p = "%var.global/ui_c" false
+    var q = "%var.player/p%%var.player/m%%" false
+    var r = %var.player/q% false
+    teamvar ui_p V = "%var.player/r%%var.team/ui_p V%" false
+}
+if () {
+    var m = %var.player/t% false
+    var t /= 27 false
+    var u = %var.player/t% false
+    var u *= 27 false
+    var m -= %var.player/u% false
+}
+if (var m > 0) {
+    var p = "%var.global/ui_c" false
+    var q = "%var.player/p%%var.player/m%%" false
+    var r = %var.player/q% false
+    teamvar ui_p V = "%var.player/r%%var.team/ui_p V%" false
+}
+function "Chat Show"

@@ -1,0 +1,11 @@
+if (!globalvar ui_owner == "%player.name%" "") {
+    chat "[LLM] Click New Chat to start. Only one player can chat at a time."
+    exit
+}
+if (!var ui_phase == 0 5) {
+    chat "[LLM] Please wait for the current word or reply."
+    exit
+}
+var ui_key = -1 false
+var tok = 56 false
+function "Chat Pick"

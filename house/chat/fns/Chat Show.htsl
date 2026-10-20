@@ -1,0 +1,130 @@
+if (!globalvar ui_owner == "%player.name%" "") {
+    chat "[LLM] Click New Chat to start. Only one player can chat at a time."
+    exit
+}
+if (!var ui_phase == 0 5) {
+    chat "[LLM] Please wait for the current word or reply."
+    exit
+}
+var bi = %var.player/ui_pack% false
+var bi >>= 0 false
+var bi &= 511 false
+if (var bi == 0) {
+    teamvar ui_s0 V = "-" false
+}
+if (var bi < 460, var bi > 0) {
+    var p = "%var.global/w" false
+    var q = "%var.player/p%%var.player/bi%%" false
+    teamvar ui_s0 V = %var.player/q% false
+}
+if (var bi >= 460) {
+    var p = "%var.team/w" false
+    var q = "%var.player/p%%var.player/bi%" false
+    var q = "%var.player/q% V%" false
+    teamvar ui_s0 V = %var.player/q% false
+}
+var bi = %var.player/ui_pack% false
+var bi >>= 9 false
+var bi &= 511 false
+if (var bi == 0) {
+    teamvar ui_s1 V = "-" false
+}
+if (var bi < 460, var bi > 0) {
+    var p = "%var.global/w" false
+    var q = "%var.player/p%%var.player/bi%%" false
+    teamvar ui_s1 V = %var.player/q% false
+}
+if (var bi >= 460) {
+    var p = "%var.team/w" false
+    var q = "%var.player/p%%var.player/bi%" false
+    var q = "%var.player/q% V%" false
+    teamvar ui_s1 V = %var.player/q% false
+}
+var bi = %var.player/ui_pack% false
+var bi >>= 18 false
+var bi &= 511 false
+if (var bi == 0) {
+    teamvar ui_s2 V = "-" false
+}
+if (var bi < 460, var bi > 0) {
+    var p = "%var.global/w" false
+    var q = "%var.player/p%%var.player/bi%%" false
+    teamvar ui_s2 V = %var.player/q% false
+}
+if (var bi >= 460) {
+    var p = "%var.team/w" false
+    var q = "%var.player/p%%var.player/bi%" false
+    var q = "%var.player/q% V%" false
+    teamvar ui_s2 V = %var.player/q% false
+}
+var bi = %var.player/ui_pack% false
+var bi >>= 27 false
+var bi &= 511 false
+if (var bi == 0) {
+    teamvar ui_s3 V = "-" false
+}
+if (var bi < 460, var bi > 0) {
+    var p = "%var.global/w" false
+    var q = "%var.player/p%%var.player/bi%%" false
+    teamvar ui_s3 V = %var.player/q% false
+}
+if (var bi >= 460) {
+    var p = "%var.team/w" false
+    var q = "%var.player/p%%var.player/bi%" false
+    var q = "%var.player/q% V%" false
+    teamvar ui_s3 V = %var.player/q% false
+}
+var bi = %var.player/ui_pack% false
+var bi >>= 36 false
+var bi &= 511 false
+if (var bi == 0) {
+    teamvar ui_s4 V = "-" false
+}
+if (var bi < 460, var bi > 0) {
+    var p = "%var.global/w" false
+    var q = "%var.player/p%%var.player/bi%%" false
+    teamvar ui_s4 V = %var.player/q% false
+}
+if (var bi >= 460) {
+    var p = "%var.team/w" false
+    var q = "%var.player/p%%var.player/bi%" false
+    var q = "%var.player/q% V%" false
+    teamvar ui_s4 V = %var.player/q% false
+}
+var bi = %var.player/ui_pack% false
+var bi >>= 45 false
+var bi &= 511 false
+if (var bi == 0) {
+    teamvar ui_s5 V = "-" false
+}
+if (var bi < 460, var bi > 0) {
+    var p = "%var.global/w" false
+    var q = "%var.player/p%%var.player/bi%%" false
+    teamvar ui_s5 V = %var.player/q% false
+}
+if (var bi >= 460) {
+    var p = "%var.team/w" false
+    var q = "%var.player/p%%var.player/bi%" false
+    var q = "%var.player/q% V%" false
+    teamvar ui_s5 V = %var.player/q% false
+}
+var bi = %var.player/ui_pack% false
+var bi >>= 54 false
+var bi &= 511 false
+if (var bi == 0) {
+    teamvar ui_s6 V = "-" false
+}
+if (var bi < 460, var bi > 0) {
+    var p = "%var.global/w" false
+    var q = "%var.player/p%%var.player/bi%%" false
+    teamvar ui_s6 V = %var.player/q% false
+}
+if (var bi >= 460) {
+    var p = "%var.team/w" false
+    var q = "%var.player/p%%var.player/bi%" false
+    var q = "%var.player/q% V%" false
+    teamvar ui_s6 V = %var.player/q% false
+}
+chat "[LLM] Letters: %var.team/ui_p V%"
+chat "[LLM] 1: %var.team/ui_s0 V% | 2: %var.team/ui_s1 V% | 3: %var.team/ui_s2 V% | 4: %var.team/ui_s3 V% | 5: %var.team/ui_s4 V% | 6: %var.team/ui_s5 V% | 7: %var.team/ui_s6 V%"
+displayMenu "LLM Keypad"

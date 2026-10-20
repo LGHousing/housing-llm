@@ -57,7 +57,34 @@ Examples that fit: V=512,d=96,L=2,f=384 (~270K); V=768,d=80,L=3,f=256 (~260K).
 `runs/<name>/vocab.json`: id -> word list.
 `runs/<name>/samples.txt`: greedy replies to 20 fixed questions.
 
+## Keypad redesign acceptance (2026-10-20)
+
+Replace the 44-menu UI with one menu: 26 letters, prefix backspace/clear,
+seven frequency-ordered suggestions, punctuation, New Chat/Send/End Chat.
+Generate a compact prefix lookup loader from vocab.json; keep the 292 model
+functions unchanged and reuse the timing/reply wrappers. The full import must
+pass htsw check and keypad clicks for the README example must reproduce its
+reply. Report UI action counts and obsolete menu names. Menu-name placeholder
+rendering requires an in-game check; include numbered chat suggestions as the
+fallback. Work stays on feat/chat-ui, pushed without merge or live import.
+
 ## Ledger
+
+- 2026-10-20: Replaced the cancelled 44-menu import with one 44-button keypad.
+  Build now has 300 functions: original 292 unchanged plus Feed, Reply, New Chat,
+  Chat Next, Chat Load, Chat Keys, Chat Show and Chat Pick. The generated lookup
+  has 228 packed Longs for seven suggestions per prefix, at most three letters;
+  team V's new total is bounded at 2,241 bytes. Numeric dynamic keys include
+  Housing's comma formatting, and packed reads use an L cast. Exact short words
+  remain selectable. Numbered chat suggestions work independently of item-name
+  placeholder rendering, which still needs an in-game check. Replaced the long
+  sentence preview with accepted-word echoes to respect string substitution
+  limits. Rough UI import size: 705 actions (557 function, 139 menu, 9 command /
+  events), one menu, no model changes. Full htsw check and keypad-driven README
+  reply pass, as do every prefix/word route, backspace, empty suggestions and
+  existing ownership, timing, input/context bounds and reconnect checks. Used
+  shared test locks; no tool sources or live house modified. Cleanup names are
+  recorded verbatim in house/old-menu-names.txt.
 
 - 2026-10-20: Callan-approved click-to-type UI on `feat/chat-ui`. `ref/build_chat.py`
   adds 4 functions (296 total), 44 menus, `/llm`, and Join/Quit guards to `house/`;

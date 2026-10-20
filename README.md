@@ -9,27 +9,36 @@ simulator on 20/20 conversations (2026-10-02). Spec and ledger: `TASK.md`.
 
 | Folder | What | Functions |
 |---|---|---|
-| `house/` | The real-house build with click-to-type chat. Import this. | 296 |
+| `house/` | The real-house build with click-to-type chat. Import this. | 300 |
 | `sim-demo/` | Simulator demo: `htsw run import.json` prints a reply. Not for a house (its `htsw:main` calls Run0/Run1 back to back, which the 4-tick cooldown forbids live). | 295 |
 
 Both pass `htsw check`.
 
 `house/` setup: create teams `T1`..`T10` and `V` before use. Players open `/llm`,
-click **New Chat**, choose words from the letter menus, then click **Send**.
-The sentence appears in chat as words are added; the answer prints automatically.
+click **New Chat**, click letters on the single keypad, select a suggested word,
+then click **Send**. Suggestions and accepted words appear in chat; the answer
+prints automatically. Backspace and Clear letters change the current prefix.
 One player can chat at a time, with up to 16 input words/punctuation marks.
 **End Chat** releases an unfinished question. See `house/README.txt` for setup,
 event import notes, limits, and the manual model interface.
 
-The UI adds four helpers, 44 menus, one command, and Join/Quit handlers; all 292
-compiled model functions remain unchanged. Regenerate it with
+The UI adds eight helpers, one 44-button menu, one command, and Join/Quit
+handlers; all 292 compiled model functions remain unchanged. The generated
+228-entry prefix table fits in existing team V storage. The UI has about 705
+stored actions; these are not HTSW import work units. Obsolete menus from the
+previous design are listed in `house/old-menu-names.txt`. Regenerate it with
 `python3 ref/build_chat.py` after building a matching model/vocabulary.
+
+**Still needs an in-game check:** whether menu item names resolve variable
+placeholders on reopening. Numbered suggestions also appear in chat, so the
+keypad works if the names stay literal. See `house/README.txt` for the probe
+and static-name fallback.
 
 Check the full build and reproduce the example through actual menu clicks:
 
-    nice -n 10 node sim/build-tools.mjs
-    nice -n 10 node build/tools/htsw.mjs check house/import.json
-    nice -n 10 node sim/check-chat.mjs
+    /home/opc/light-lock.sh node sim/build-tools.mjs
+    /home/opc/light-lock.sh node build/tools/htsw.mjs check house/import.json
+    /home/opc/heavy-lock.sh node sim/check-chat.mjs
 
 The tool builder reads `/home/opc/htsw` and `/home/opc/htsw-simulator` without
 editing them; override `HTSW_ROOT` / `HTSW_SIM_ROOT` for other installations.
@@ -46,7 +55,7 @@ Headless fleet import: point the bot at this repo with `path: house`.
 | `runs/<name>/` | trained models (`model.npz`, `config.json`, `vocab.json`, samples). Final: `v512_d96_L2_f384_mqa` |
 | `ref/intmodel.py` | integer model (the spec the compiler matches) |
 | `ref/compile.py`, `ref/build.py` | HTSL compiler and build driver |
-| `ref/build_chat.py` | Generates the word menus, chat helpers, and `/llm` entry point |
+| `ref/build_chat.py` | Generates the keypad, packed prefix lookup, chat helpers, and `/llm` |
 | `sim/check-chat.mjs` | Menu-to-reply regression and shared-state/timing checks |
 | `sim/run.mjs` | HTSW simulator runner (checks sim == integer reference) |
 | `probe/` | live throughput probe generator |

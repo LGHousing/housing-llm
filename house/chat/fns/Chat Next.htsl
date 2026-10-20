@@ -12,14 +12,16 @@ if (var ui_phase == 2) {
     var done = 0 false
     var ui_phase = 0 false
     chat "[LLM] Choose up to 16 words or punctuation marks, then Send."
-    displayMenu "LLM Words"
+    var ui_key = 0 false
+    function "Chat Keys"
     exit
 }
 if (var ui_phase == 3) {
     var done = 0 false
     var ui_phase = 0 false
-    chat "[LLM] You:%var.team/ui_q V%"
-    displayMenu "LLM Words"
+    var ui_n = 0 false
+    var ui_key = 0 false
+    function "Chat Keys"
     exit
 }
 if (!var ui_phase == 4) {

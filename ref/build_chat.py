@@ -7,25 +7,65 @@ Vocabulary order is frequency order with pinned evaluation words at the end
 Only house/chat and the UI entries in import.json are owned by this script.
 """
 import argparse
+import hashlib
+import string
 import json
 from pathlib import Path
 import re
 import shutil
 
-CAP = 40
+K = 7
+BITS = 9
 CONTEXT = 48
 MAX_INPUT = 16
-ROOT = "LLM Words"
-SYMBOLS = "LLM Symbols"
-FUNCTIONS = ("Feed", "Reply", "New Chat", "Chat Next")
+ROOT = "LLM Keypad"
+FUNCTIONS = ("Feed", "Reply", "New Chat", "Chat Next", "Chat Load", "Chat Keys", "Chat Show", "Chat Pick")
 
 
 def build(house):
     vocab = json.loads((house / "vocab.json").read_text())
     assert vocab[:6] == ["<pad>", "<unk>", "<bos>", "<user>", "<bot>", "<eos>"]
     assert len(set(vocab)) == len(vocab)
-    # Leave room for the prefix in the single-message sentence preview.
-    max_input = min(MAX_INPUT, 240 // (max(map(len, vocab)) + 1))
+    # Keep room for the reply within the model context.
+    max_input = MAX_INPUT
+    assert len(vocab) <= 1 << BITS
+    words = [i for i, w in enumerate(vocab) if re.fullmatch("[a-z]+", w)]
+    prefixes = {}
+
+    def visit(prefix, tokens):
+        choices = tokens[:K]
+        # Keep exact short words reachable even outside the seven most common.
+        exact = next((t for t in tokens if vocab[t] == prefix), None)
+        if exact is not None and exact not in choices:
+            choices = sorted(choices[:K - 1] + [exact])
+        prefixes[prefix] = choices
+        if len(prefix) < 2 or len(tokens) > K:
+            letters = sorted({vocab[t][len(prefix)] for t in tokens if len(vocab[t]) > len(prefix)})
+            for letter in letters:
+                child = prefix + letter
+                visit(child, [t for t in tokens if vocab[t].startswith(child)])
+
+    visit("", words)
+    depth = max(map(len, prefixes))
+    assert depth <= 12  # Numeric base-27 prefix must fit a signed Long.
+    # V's strings + packed lookup + current prefix and seven suggestion names.
+    v_bytes = sum(len(w.encode()) for w in vocab[460:])
+    v_bytes += 8 * len(prefixes) + K * max(map(len, vocab)) + depth
+    assert v_bytes <= 2560, f"Team V lookup needs {v_bytes} bytes"
+
+    def code(prefix):
+        n = 0
+        for c in prefix:
+            n = n * 27 + ord(c) - ord('a') + 1
+        return n
+
+    packed = {code(p): sum(t << (BITS * i) for i, t in enumerate(ts)) for p, ts in prefixes.items()}
+    version = int(hashlib.sha256(json.dumps([vocab, packed]).encode()).hexdigest()[:7], 16)
+    routes = {}
+    for prefix, tokens in prefixes.items():
+        for i, token in enumerate(tokens):
+            routes.setdefault(str(token), dict(prefix=prefix, suggestion=i))
+    assert all(str(t) in routes for t in words), "A word is hidden behind more frequent prefix matches"
     manifest = json.loads((house / "import.json").read_text())
     for kind in ("functions", "menus", "commands", "events"):
         manifest[kind] = [x for x in manifest.get(kind, [])
@@ -102,7 +142,8 @@ var ui_phase = 1 false
 var ui_work = 0 false
 var gen = 0 false
 var done = 0 false
-teamvar ui_q V = "" false
+var ui_n = 0 false
+function "Chat Load"
 function "Init"
 var tok = 2 false
 chat "[LLM] Starting a new question..."
@@ -134,14 +175,16 @@ if (var ui_phase == 2) {{
     var done = 0 false
     var ui_phase = 0 false
     chat "[LLM] Choose up to {max_input} words or punctuation marks, then Send."
-    displayMenu "{ROOT}"
+    var ui_key = 0 false
+    function "Chat Keys"
     exit
 }}
 if (var ui_phase == 3) {{
     var done = 0 false
     var ui_phase = 0 false
-    chat "[LLM] You:%var.team/ui_q V%"
-    displayMenu "{ROOT}"
+    var ui_n = 0 false
+    var ui_key = 0 false
+    function "Chat Keys"
     exit
 }}
 if (!var ui_phase == 4) {{
@@ -167,7 +210,6 @@ if (var ui_phase == 4) {
 chat "[LLM] Chat released. Anyone can start a new question."
 closeMenu''')
     back = write("actions/root.htsl", f'displayMenu "{ROOT}"')
-    symbols = write("actions/symbols.htsl", f'displayMenu "{SYMBOLS}"')
     manifest["commands"].append(dict(name="llm", mode="Self", requiredPriority=0,
         listed=True, actions=back))
     manifest["events"].append(dict(event="Player Quit", actions=write("actions/quit.htsl", f'''
@@ -191,90 +233,139 @@ var ui_phase = 5 false''')))
     def slot(index, key, label, actions, lore=(), material="paper"):
         return dict(slot=index, nbt=item(key, label, lore, material), actions=actions)
 
-    def menu(name, slots):
-        assert len({s["slot"] for s in slots}) == len(slots)
-        assert all(0 <= s["slot"] < 54 for s in slots)
-        manifest["menus"].append(dict(name=name, size=6, slots=slots))
+    # All seven 9-bit token IDs fit in one nonnegative 63-bit Long.
+    # Dynamic numeric placeholders have commas; L casts undo that formatting.
+    loads = [f'teamvar "k{n:,}" V = {value} false' for n, value in packed.items()]
+    loads += [f'globalvar ui_c{i} = "{c}" false' for i, c in enumerate(string.ascii_lowercase, 1)]
+    loader = [f"if (globalvar ui_rev == {version} 0) {{", "    exit", "}"]
+    for offset in range(0, len(loads), 25):
+        loader += ["if () {"] + ["    " + line for line in loads[offset:offset + 25]] + ["}"]
+    loader.append(f"globalvar ui_rev = {version} false")
+    function("Chat Load", "\n".join(loader))
 
-    def word_slot(index, token):
-        word = vocab[token]
-        actions = write(f"words/{token}.htsl", f'''{ready_guard}
-if (var pos >= {max_input + 2}) {{
-    chat "[LLM] Question full. Click Send or New Chat."
-    displayMenu "{ROOT}"
+    keys = f'''{ready_guard}
+if (var ui_key > 0, var ui_n >= {27 ** (depth - 1)}) {{
+    chat "[LLM] Choose a suggestion, Backspace, or Clear letters."
     exit
 }}
-var tok = {token} false
+if (var ui_key > 0) {{
+    var ui_n *= 27 false
+    var ui_n += %var.player/ui_key% false
+}}
+if (var ui_key == -1) {{
+    var ui_n /= 27 false
+}}
+if (var ui_key == -2) {{
+    var ui_n = 0 false
+}}
+var p = "%var.team/k" false
+var q = "%var.player/p%%var.player/ui_n%" false
+var q = "%var.player/q% V%L" false
+var ui_pack = %var.player/q% false
+if (var ui_pack == "L") {{
+    var ui_pack = 0 false
+}}
+teamvar ui_p V = "" false
+var t = %var.player/ui_n% false
+'''
+    for _ in range(depth):
+        keys += '''if () {
+    var m = %var.player/t% false
+    var t /= 27 false
+    var u = %var.player/t% false
+    var u *= 27 false
+    var m -= %var.player/u% false
+}
+if (var m > 0) {
+    var p = "%var.global/ui_c" false
+    var q = "%var.player/p%%var.player/m%%" false
+    var r = %var.player/q% false
+    teamvar ui_p V = "%var.player/r%%var.team/ui_p V%" false
+}
+'''
+    keys += 'function "Chat Show"'
+    function("Chat Keys", keys)
+
+    def lookup(target):
+        return f'''if (var bi < 460, var bi > 0) {{
+    var p = "%var.global/w" false
+    var q = "%var.player/p%%var.player/bi%%" false
+    {target} = %var.player/q% false
+}}
+if (var bi >= 460) {{
+    var p = "%var.team/w" false
+    var q = "%var.player/p%%var.player/bi%" false
+    var q = "%var.player/q% V%" false
+    {target} = %var.player/q% false
+}}
+'''
+
+    show = ready_guard + "\n"
+    for i in range(K):
+        show += f'''var bi = %var.player/ui_pack% false
+var bi >>= {BITS * i} false
+var bi &= {(1 << BITS) - 1} false
+if (var bi == 0) {{
+    teamvar ui_s{i} V = "-" false
+}}
+''' + lookup(f"teamvar ui_s{i} V")
+    show += 'chat "[LLM] Letters: %var.team/ui_p V%"\n'
+    show += 'chat "[LLM] ' + ' | '.join(f'{i+1}: %var.team/ui_s{i} V%' for i in range(K)) + '"\n'
+    show += f'displayMenu "{ROOT}"'
+    function("Chat Show", show)
+
+    pick = f'''{ready_guard}
+if (var pos >= {max_input + 2}) {{
+    chat "[LLM] Question full. Click Send or New Chat."
+    exit
+}}
+if (var ui_key >= 0) {{
+    var tok = %var.player/ui_pack% false
+    var ui_key *= {BITS} false
+    var tok >>= %var.player/ui_key% false
+    var tok &= {(1 << BITS) - 1} false
+}}
+if (var tok == 0) {{
+    chat "[LLM] No word in that slot. Try Backspace or Clear letters."
+    exit
+}}
+var bi = %var.player/tok% false
+''' + lookup("var r") + '''chat "[LLM] Added: %var.player/r%"
 var ui_phase = 3 false
-teamvar ui_q V = "%var.team/ui_q V% {word}" false
-function "Feed"''')
-        return slot(index, f"word-{token}", word, actions, ["Click to add this word."])
+function "Feed"
+'''
+    function("Chat Pick", pick)
 
-    routes = {}
-    def prefix_menu(prefix, tokens, trail):
-        name = "LLM " + prefix
-        link = write(f"actions/prefix-{prefix}.htsl", f'displayMenu "{name}"')
-        slots = []
-        if len(tokens) <= CAP:
-            for i, token in enumerate(tokens):
-                slots.append(word_slot(i, token))
-                routes[str(token)] = trail + [i]
-        else:
-            # Exact-prefix words (e.g. 's') remain selectable at this level.
-            exact = [t for t in tokens if vocab[t] == prefix]
-            for token in exact:
-                i = len(slots)
-                slots.append(word_slot(i, token))
-                routes[str(token)] = trail + [i]
-            letters = sorted({vocab[t][len(prefix)] for t in tokens if len(vocab[t]) > len(prefix)})
-            for letter in letters:
-                child = prefix + letter
-                i = len(slots)
-                action = prefix_menu(child, [t for t in tokens if vocab[t].startswith(child)], trail + [i])
-                slots.append(slot(i, "prefix-" + child, child.upper(), action, ["Choose a word starting with " + child]))
-        slots.append(slot(45, "back", "Back to letters", back, material="arrow"))
-        menu(name, slots)
-        return link
-
-    words = [i for i, w in enumerate(vocab) if re.fullmatch("[a-z]+", w)]
-    root_slots = []
-    for i, letter in enumerate(sorted({vocab[t][0] for t in words})):
-        link = prefix_menu(letter, [t for t in words if vocab[t].startswith(letter)], [i])
-        root_slots.append(slot(i, "letter-" + letter, letter.upper(), link))
-    for i, symbol in enumerate(("?", ".", ","), 36):
-        root_slots.append(word_slot(i, vocab.index(symbol)))
-        routes[str(vocab.index(symbol))] = [i]
-    root_slots += [
-        slot(40, "symbols", "Symbols and special tokens", symbols),
-        slot(45, "new", "New Chat", new_chat, ["Start a fresh question."], "book"),
-        slot(49, "send", "Send", send, ["The answer prints automatically in chat."], "emerald"),
-        slot(53, "end", "End Chat", end, ["Release the model without sending."], "barrier"),
-    ]
-    menu(ROOT, root_slots)
-    symbol_slots = []
-    for token, word in enumerate(vocab):
-        if re.fullmatch("[a-z]+", word):
-            continue
-        i = len(symbol_slots)
-        if token in (0, 2, 3, 4, 5):
-            # The reserved markers must not be injected into the question.
-            explanation = {0: "Padding is internal and is not part of a question.",
-                2: "New Chat adds <bos> automatically.", 3: "New Chat adds <user> automatically.",
-                4: "Send adds <bot> automatically.", 5: "The reply ends automatically at <eos>."}[token]
-            action = write(f"actions/special-{token}.htsl", f'chat "[LLM] {explanation}"')
-            symbol_slots.append(slot(i, f"special-{token}", word + " (automatic)", action, [explanation]))
-        else:
-            symbol_slots.append(word_slot(i, token))
-            routes.setdefault(str(token), [40, i])
-    assert len(symbol_slots) <= CAP, "Add paging for the non-word tokens in this vocabulary."
-    symbol_slots.append(slot(45, "back", "Back to letters", back, material="arrow"))
-    menu(SYMBOLS, symbol_slots)
-    assert len(manifest["menus"]) <= 50, "Menu budget exceeded; use larger pages or fewer prefixes."
+    slots = []
+    for i, letter in enumerate(string.ascii_lowercase):
+        action = write(f"actions/key-{letter}.htsl", f'var ui_key = {i+1} false\nfunction "Chat Keys"')
+        slots.append(slot(i, "key-" + letter, letter.upper(), action, ["Add a letter to narrow the suggestions."]))
+    for i, value, label, key in [(27, -1, "Backspace", "backspace"), (28, -2, "Clear letters", "clear")]:
+        action = write(f"actions/{key}.htsl", f'var ui_key = {value} false\nfunction "Chat Keys"')
+        slots.append(slot(i, key, label, action, ["Changes the letters, not words already added."], "arrow"))
+    slots += [slot(30, "new", "New Chat", new_chat, material="book"),
+              slot(31, "send", "Send", send, material="emerald"),
+              slot(32, "end", "End Chat", end, material="barrier")]
+    punctuation = {}
+    for i, word in enumerate(("?", ".", ",", "!", "'", "<unk>"), 36):
+        token = vocab.index(word)
+        # Guard before setting tok: a punctuation click during Run0/Run1 must
+        # never change the model input while Chat Pick rejects the busy click.
+        action = write(f"actions/token-{token}.htsl", ready_guard + f'\nvar ui_key = -1 false\nvar tok = {token} false\nfunction "Chat Pick"')
+        slots.append(slot(i, f"token-{token}", word, action))
+        punctuation[word] = i
+    for i in range(K):
+        action = write(f"actions/pick-{i}.htsl", f'var ui_key = {i} false\nfunction "Chat Pick"')
+        slots.append(slot(45 + i, f"suggestion-{i}", f"{i+1}: %var.team/ui_s{i} V%", action,
+            [f"Suggestion {i+1}. The numbered list is also in chat."]))
+    manifest["menus"].append(dict(name=ROOT, size=6, slots=slots))
     (house / "import.json").write_text(json.dumps(manifest, indent=1) + "\n")
     write("routes.json", json.dumps(dict(root=ROOT, maxInput=max_input, context=CONTEXT,
-        routes=routes, new=45, send=49, end=53), indent=2))
-    print(f'{len(manifest["functions"])} functions, {len(manifest["menus"])} menus; '
-          f'{len(words)} words, {max_input}-token question limit')
+        routes=routes, new=30, send=31, end=32, backspace=27, clear=28,
+        punctuation=punctuation, suggestionStart=45, prefixDepth=depth,
+        prefixes=prefixes, version=version, teamVBytes=v_bytes), indent=2))
+    print(f'{len(manifest["functions"])} functions, {len(manifest["menus"])} menu; '
+          f'{len(prefixes)} prefix entries, {depth} letters max; team V <= {v_bytes} bytes')
 
 
 if __name__ == "__main__":
