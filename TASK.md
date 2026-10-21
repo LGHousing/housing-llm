@@ -80,6 +80,14 @@ same branch; IMPORT handles live smoke testing and existing event actions.
 
 ## Ledger
 
+- 2026-10-20: Remaining live exports confirm all six n19 functions have the
+  same substitution (46 writes total); F043/r65 matches exactly. F028 has 16
+  division spelling differences, all in phase one: `/=` becomes `…/=`.
+  HTSW fde9950d defines no alternate divide mode
+  or ellipsis operator. Requested actual Operation field inspection, plus a
+  fresh n19 assignment exported before execution. No holder relocation yet;
+  verify repaired functions by exporting again before the next fresh chat.
+
 - 2026-10-20: Five-call live batching passed batch 18 but failed batch 19.
   IMPORT isolated F063, then exported it read-only: exactly six writes to T4
   n19 were imported as Kills; remaining source lines match. Static audit counts

@@ -58,9 +58,17 @@ necessarily live creation order. The compiler chooses 300 Longs / 2,400 bytes
 against its assumed 2,560-byte budget; 300 is not a verified Housing name limit.
 Existing extra live variables could consume that margin. F063's n20..n23 write
 targets are correct, so the export does not show a blanket failure of later names.
-All n19 references occur in F016, F063, F113, F160, F161 and F168. IMPORT is
-checking the other five exports; F028 (n95) and F043 (r65) are boundary samples.
-Keep the source calculation and holder allocation unchanged pending those checks.
+All n19 references occur in F016, F063, F113, F160, F161 and F168. Live exports
+confirm the same substitution in all six (46 changed write targets total).
+F043, which writes the last T4 variable r65, matches exactly. F028's n95 writes
+match, but its 16 phase-one divisions export as "…/=" instead of "/=". HTSW
+v1.3.3 (fde9950d) defines only Divide, printed as "/="; this is not a recognized
+alternate division mode. Inspect the live Operation field before treating that
+export difference as harmless. F028 passing phase zero did not test those lines.
+Next: IMPORT checks a fresh n19 assignment by exporting before running it, then
+checks that writing 1 succeeds. Repair the six affected functions only after
+that succeeds, and export again to verify the names. Start a fresh chat afterward.
+Keep source calculation and holder allocation unchanged pending that check.
 
 The five-call batching update changed ONLY Run0, Run1 and Run0_1. Chat Next is byte-identical;
 keep its installed clock. HTSW currently fails to read back Housing's
