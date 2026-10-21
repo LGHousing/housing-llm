@@ -80,6 +80,18 @@ same branch; IMPORT handles live smoke testing and existing event actions.
 
 ## Ledger
 
+- 2026-10-20: Five-call live batching passed batch 18 but failed batch 19.
+  IMPORT isolated F063, then exported it read-only: exactly six writes to T4
+  n19 were imported as Kills; remaining source lines match. Static audit counts
+  exactly 300 T4 variables, with n19 at allocation position 158, r65 at 300.
+  Compiler packing target is 300 Longs / 2,400 bytes, not a verified name cap;
+  live extras and import creation order remain unknown. F063 n20..n23 are named
+  correctly. All n19 references: F016, F063, F113, F160, F161, F168. Requested
+  remaining five read-only exports plus boundary samples F028 (n95), F043 (r65).
+  No further math, batching, holder, or Chat Next changes. Arithmetic probes
+  were checked locally before the export arrived, then set aside under ignored
+  build/f063-arithmetic-probes; no probe import is needed for this comparison.
+
 - 2026-10-20: The ten-call scheduler reached phase 0 batch 8 (F056-F065) live,
   then aborted and recovered correctly. Failed-state read: sm=2^30, mx=-148,
   z0=255, z47=0; the normalization divisor was nonzero. Halve batches to five

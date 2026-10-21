@@ -43,10 +43,26 @@ generic execution error. That locates the failure in the model pass, rather than
 the keypad or lookup loader; it does not yet establish the precise server limit.
 The first ten-function batching attempt failed at phase 0 batch 8 (F056-F065).
 At failure sm=2^30, z0=255 and z47=0, so the F057 normalization divisor was
-nonzero. The exact failure point and server limit are still unmeasured.
-The new five-function batches split that range into batch 18 (F056-F060) and
-batch 19 (F061-F065). Do not resume a failed partial batch: use New Chat to reset.
-For this update import ONLY Run0, Run1 and Run0_1. Chat Next is byte-identical;
+nonzero. With five-function batches, batch 18 (F056-F060) passed and batch 19
+(F061-F065) failed. Individual calls isolated the failure to F063. A read-only
+live export then showed six write targets changed from team n19 on T4 to Kills;
+all other lines matched the source. This confirms an import mismatch, not its
+cause or the server's execution limit. Further batch reduction is not justified
+by that failure. Do not resume a failed partial batch: use New Chat to reset
+after IMPORT finishes examining the preserved diagnostic state.
+
+Source T4 uses exactly 300 Long variables: 60 KV-cache values (V0_36_6 through
+V0_47_6 and V0_0_7 through V0_47_7), o18..o95 (78), n0..n95 (96), r0..r65 (66).
+n19 is number 158 in compiler allocation order; r65 is number 300. This is not
+necessarily live creation order. The compiler chooses 300 Longs / 2,400 bytes
+against its assumed 2,560-byte budget; 300 is not a verified Housing name limit.
+Existing extra live variables could consume that margin. F063's n20..n23 write
+targets are correct, so the export does not show a blanket failure of later names.
+All n19 references occur in F016, F063, F113, F160, F161 and F168. IMPORT is
+checking the other five exports; F028 (n95) and F043 (r65) are boundary samples.
+Keep the source calculation and holder allocation unchanged pending those checks.
+
+The five-call batching update changed ONLY Run0, Run1 and Run0_1. Chat Next is byte-identical;
 keep its installed clock. HTSW currently fails to read back Housing's
 "Current: 5 Ticks (Less than 1 second)" lore, even though the clock runs live.
 
