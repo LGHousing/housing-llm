@@ -31,7 +31,7 @@ sim.transcript.append = e => {
     const fn = e.action.function;
     const p = e.player === "Alice" ? alice : bob;
     if (modelFunctions.has(fn)) mathCalls.push(fn);
-    if (["Run0", "Run1"].includes(fn)) {
+    if (["Run0", "Run1"].includes(fn) && batches.at(-1)?.tick !== e.tick) {
         const batch = { tick: e.tick, player: e.player, fn, tok: Number(get(p, "tok")), part: Number(get(p, "ui_part")) };
         batches.push(batch);
         if (batch.part === 0) passes.push(batch);
@@ -59,7 +59,7 @@ function clickWord(p, word) {
     }
     p.clickMenuSlot(ui.suggestionStart + route.suggestion);
 }
-function waitReady(p, max = 1200) {
+function waitReady(p, max = 2000) {
     for (let i = 0; i < max && get(p, "ui_phase") !== "0"; i++) advance(1);
     assert.equal(get(p, "ui_phase"), "0", p.chatMessages().join("\n"));
     assert.equal(p.openMenu, ui.root);
@@ -157,7 +157,7 @@ alice.clickMenuSlot(ui.send);
 assert.equal(get(alice, "done"), "0");
 assert.equal(get(alice, "ui_phase"), "4");
 assert.equal(alice.openMenu, undefined);
-for (let t = 0; t < 6000 && get(alice, "ui_phase") !== "5"; t++) advance(1);
+for (let t = 0; t < 10000 && get(alice, "ui_phase") !== "5"; t++) advance(1);
 const reply = alice.chatMessages().slice(start).filter(x => !x.startsWith("[LLM]")).join(" ");
 assert.equal(reply, "i enjoy them , they make me feel happy .");
 assert.equal(get(alice, "done"), "1");
@@ -172,7 +172,7 @@ for (let i = 0; i < passes.length; i += 2) {
 for (let i = 1; i < batches.length; i++) assert(batches[i].tick - batches[i - 1].tick >= 5);
 const expectedCalls = passes.flatMap(p => modelPasses[p.fn]);
 assert.deepEqual(mathCalls, expectedCalls); // Exact original compiler order, no skipped/repeated math.
-assert(maxTickActions < 7000, `Batch performed ${maxTickActions} actions`);
+assert(maxTickActions < 3500, `Batch performed ${maxTickActions} actions`);
 console.log(`PASS: model call order, five-tick spacing, maximum ${maxTickActions} actions/tick`);
 console.log(`PASS: README example via keypad clicks + Feed/Reply: ${reply}`);
 console.log("PASS: startup markers, empty Send, duplicate clicks, shared-player lock, pass timing");

@@ -1,64 +1,219 @@
-// Batched overflow for both model passes.
-if (var ui_part == 25 0, var ph == 0) {
+// Batched by ref/build_chat.py; five calls maximum per tick.
+if (var ui_part == 40 0) {
+    function "F166"
+    function "F167"
+    function "F168"
+    function "F169"
+    function "F170"
+    var ui_part = 41 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 41 0) {
+    function "F171"
+    function "F172"
+    function "F173"
+    function "F174"
+    function "F175"
+    var ui_part = 42 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 42 0) {
+    function "F176"
+    function "F177"
+    function "F178"
+    function "F179"
+    function "F180"
+    var ui_part = 43 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 43 0) {
+    function "F181"
+    function "F182"
+    function "F183"
+    function "F184"
+    function "F185"
+    var ui_part = 44 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 44 0) {
+    function "F186"
+    function "F187"
+    function "F188"
+    function "F189"
+    function "F190"
+    var ui_part = 45 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 45 0) {
+    function "F191"
+    function "F192"
+    function "F193"
+    function "F194"
+    function "F195"
+    var ui_part = 46 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 46 0) {
+    function "F196"
+    function "F197"
+    function "F198"
+    function "F199"
+    function "F200"
+    var ui_part = 47 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 47 0) {
+    function "F201"
+    function "F202"
+    function "F203"
+    function "F204"
+    function "F205"
+    var ui_part = 48 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 48 0) {
+    function "F206"
+    function "F207"
+    function "F208"
+    function "F209"
+    function "F210"
+    var ui_part = 49 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 49 0) {
+    function "F211"
+    function "F212"
+    function "F213"
+    function "F214"
+    function "F215"
+    var ui_part = 50 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 50 0) {
+    function "F216"
+    function "F217"
+    function "F218"
+    function "F219"
+    function "F220"
+    var ui_part = 51 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 51 0) {
+    function "F221"
+    function "F222"
+    function "F223"
+    function "F224"
+    function "F225"
+    var ui_part = 52 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 52 0) {
     function "F226"
     function "F227"
     function "F228"
     function "F229"
     function "F230"
+    var ui_part = 53 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 53 0) {
     function "F231"
     function "F232"
     function "F233"
     function "F234"
     function "F235"
-    var ui_part = 26 false
-    var ui_work = 1 false
+    var ui_part = 54 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
     exit
 }
-if (var ui_part == 26 0, var ph == 0) {
+if (var ui_part == 54 0) {
     function "F236"
     function "F237"
     function "F238"
+    var ui_part = 55 false
+    var ui_part += %var.player/ph% false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 55 0) {
     function "KW1_0"
     function "VW1_0"
     function "VW1_1"
+    var ui_part = 56 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 56 0) {
     function "F239"
     function "F240"
     function "F241"
     function "F242"
-    var ui_part = 27 false
-    var ui_work = 1 false
+    function "F243"
+    var ui_part = 57 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
     exit
 }
-if (var ui_part == 27 0, var ph == 0) {
-    function "F243"
+if (var ui_part == 57 0) {
     function "F244"
     function "F245"
     function "F246"
     function "F247"
     function "F248"
+    var ui_part = 58 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
+    exit
+}
+if (var ui_part == 58 0) {
     function "F249"
     function "F250"
     function "F251"
     function "F252"
-    var ui_part = 28 false
-    var ui_work = 1 false
+    function "F253"
+    var ui_part = 59 false
+    var ui_work = %var.player/ph% false
+    var ui_work += 1 false
     exit
 }
-if (var ui_part == 28 0, var ph == 0) {
-    function "F253"
+if (var ui_part == 59 0) {
     function "F254"
     function "F255"
-    var ui_part = 0 false
+    var ui_part = %var.player/ph% false
+    var ui_part *= 60 false
     var ui_work = 2 false
     exit
 }
-if (var ui_part == 25 0, var ph == 1) {
-    function "F250"
-    function "F251"
-    function "F252"
-    function "F253"
-    function "F254"
-    function "F255"
+if (var ui_part == 60 0) {
     function "Out"
     var ui_part = 0 false
     var ui_work = 3 false

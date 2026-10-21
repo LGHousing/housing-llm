@@ -25,9 +25,9 @@ recovery and import notes, limits, and the manual model interface.
 The UI adds eight helpers, one 43-button menu, and one command. It does not
 replace the house's Join/Quit events. New Chat and End Chat can recover any busy
 state, including an abandoned player's question. The model's three dispatchers
-now split each token into 55 batches, spaced five ticks apart; its 289 other
-functions are unchanged. This conservative first-live-test setting takes roughly
-14 seconds per token. The old full Run0 pass failed live; the exact Housing limit
+now split each token into 114 batches, spaced five ticks apart; its 289 other
+functions are unchanged. This smaller-batch setting takes roughly
+29 seconds per token. The old full Run0 pass failed live; the exact Housing limit
 still needs measuring. The generated 228-entry lookup fits in team V storage.
 
 Letter buttons use light-blue wool named A–Z; suggestion buttons show only the word.

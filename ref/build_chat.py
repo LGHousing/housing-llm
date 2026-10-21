@@ -18,6 +18,7 @@ K = 7
 BITS = 9
 CONTEXT = 48
 MAX_INPUT = 16
+BATCH_CALLS = 5
 ROOT = "LLM Keypad"
 FUNCTIONS = ("Feed", "Reply", "New Chat", "Chat Next", "Chat Load", "Chat Keys", "Chat Show", "Chat Pick")
 
@@ -100,20 +101,57 @@ def build(house):
             return result
         passes_file.write_text(json.dumps({name: calls(name) for name in ("Run0", "Run1")}, indent=2) + "\n")
     passes = json.loads(passes_file.read_text())
-    overflow = []
-    for phase, name in enumerate(("Run0", "Run1")):
-        sequence = passes[name]
-        chunks = [sequence[i:i + 10] for i in range(0, len(sequence), 10)]
-        lines = ["// Batched by ref/build_chat.py; call once per scheduler tick.", f"var ph = {phase} false"]
-        for i, chunk in enumerate(chunks):
-            block = [f"if (var ui_part == {i} 0" + (f", var ph == {phase}" if i >= 25 else "") + ") {"]
-            block += [f'    function "{fn}"' for fn in chunk]
-            block += [f"    var ui_part = {i + 1 if i + 1 < len(chunks) else 0} false",
-                      f"    var ui_work = {phase + 1 if i + 1 < len(chunks) else phase + 2} false", "    exit", "}"]
-            (lines if i < 25 else overflow).extend(block)
-        lines += ['function "Run0_1"']
+    # Both phases use F000..F255 in the same order. Share their selectors so
+    # five-call batches fit 3 x 25 flat conditionals (Housing forbids nesting).
+    common = [fn for fn in passes["Run1"] if re.fullmatch(r"F[0-9]+", fn)]
+    assert [fn for fn in passes["Run0"] if fn in common] == common
+    assert passes["Run1"] == common + ["Out"]
+    stages = []
+    pending = []
+    special = None
+    for fn in passes["Run0"]:
+        is_special = fn not in common
+        if pending and (is_special != special or len(pending) == BATCH_CALLS):
+            stages.append((special, pending))
+            pending = []
+        special = is_special
+        pending.append(fn)
+    if pending:
+        stages.append((special, pending))
+    first_math = next(i for i, (special, _) in enumerate(stages) if not special)
+    out_index = len(stages)
+    assert out_index + 1 <= 65  # 20 + 20 + 25 available selectors.
+    assert not stages[-1][0]
+    names = ("Run0", "Run1", "Run0_1")
+    bodies = {name: ["// Batched by ref/build_chat.py; five calls maximum per tick."] for name in names}
+    bodies["Run0"] += ["if (var ui_part == 0 0) {", "    var ph = 0 false", "}"]
+    bodies["Run1"] += ["if (var ui_part == 0 0) {", "    var ph = 1 false",
+                       f"    var ui_part = {first_math} false", "}"]
+    for i, (_, chunk) in enumerate(stages + [(True, ["Out"])]):
+        lines = bodies[names[min(i // 20, 2)]]
+        lines += [f"if (var ui_part == {i} 0) {{"]
+        lines += [f'    function "{fn}"' for fn in chunk]
+        if i == out_index:
+            lines += ["    var ui_part = 0 false", "    var ui_work = 3 false"]
+        elif i + 1 == out_index:
+            # Phase zero finishes here; phase one still needs Out next tick.
+            lines += ["    var ui_part = %var.player/ph% false",
+                      f"    var ui_part *= {out_index} false", "    var ui_work = 2 false"]
+        else:
+            lines += [f"    var ui_part = {i + 1} false"]
+            if not stages[i][0] and stages[i + 1][0]:
+                assert i + 2 < out_index and not stages[i + 2][0]
+                lines += ["    var ui_part += %var.player/ph% false"]  # Skip phase-zero KV writes in phase one.
+            lines += ["    var ui_work = %var.player/ph% false", "    var ui_work += 1 false"]
+        lines += ["    exit", "}"]
+    # Entry functions also hold shared selectors. Cross-calls only go to the
+    # relevant range and never back to a function already called this tick.
+    bodies["Run0"] += ["if (var ui_part >= 20, var ui_part < 40) {",
+                       '    function "Run1"', "    exit", "}", 'function "Run0_1"']
+    bodies["Run1"] += ["if (var ui_part < 20) {", '    function "Run0"',
+                       "    exit", "}", 'function "Run0_1"']
+    for name, lines in bodies.items():
         (house / f"fns/{name}.htsl").write_text("\n".join(lines) + "\n")
-    (house / "fns/Run0_1.htsl").write_text("// Batched overflow for both model passes.\n" + "\n".join(overflow) + "\n")
 
     owner_guard = '''if (!globalvar ui_owner == "%player.name%" "") {
     chat "[LLM] Click New Chat to start. Only one player can chat at a time."

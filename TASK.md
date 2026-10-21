@@ -80,6 +80,18 @@ same branch; IMPORT handles live smoke testing and existing event actions.
 
 ## Ledger
 
+- 2026-10-20: The ten-call scheduler reached phase 0 batch 8 (F056-F065) live,
+  then aborted and recovered correctly. Failed-state read: sm=2^30, mx=-148,
+  z0=255, z47=0; the normalization divisor was nonzero. Halve batches to five
+  calls, sharing phase-aware selectors within Housing's flat conditional limit.
+  Only Run0 / Run1 / Run0_1 change in the import; leave Chat Next and its working
+  clock untouched (HTSW currently cannot parse its live repeat-interval lore).
+  Now 60+54 calculation batches per token, about 29 seconds/token at 20 TPS.
+  Full htsw check and keypad simulator pass, including exact original call
+  order, README reply and recovery checks. Maximum measured tick: 3,315 actions
+  (previously 6,553). Generator reproduces its output; only the three dispatcher
+  bodies differ in the import. The failed range is now batches 18 and 19.
+
 - 2026-10-20: IMPORT job ffe236d6 failed to creative-spawn the custom skull A.
   Replace only the 26 alphabet item payloads with light-blue wool named A–Z;
   keep every slot, click action, function and variable unchanged. Remove the

@@ -31,9 +31,9 @@ need to reconnect: anyone may use New Chat or End Chat. These controls deliberat
 allow players to cancel one another; use the house's access rules if needed.
 
 Questions allow 16 words/punctuation marks, leaving room in the 48-token context.
-The conservative batch size takes about 14 seconds per model token at 20 ticks/s:
-New Chat takes about 30 seconds; replies take roughly 14 seconds per output word.
-Server load can make this longer. This is intended for the first live validation;
+The conservative batch size takes about 29 seconds per model token at 20 ticks/s:
+New Chat takes about one minute; replies take roughly 29 seconds per output word.
+Server load can make this longer. This is intended for live validation;
 the server's actual execution ceiling has not yet been measured.
 
 LIVE FAILURE AND RECOVERY
@@ -41,9 +41,24 @@ LIVE FAILURE AND RECOVERY
 IMPORT verified Init alone succeeds, but the old Run0 alone fails with Housing's
 generic execution error. That locates the failure in the model pass, rather than
 the keypad or lookup loader; it does not yet establish the precise server limit.
-Run0 and Run1 now run at most ten original calculation functions per invocation.
-Chat Next repeats every five ticks and runs exactly one batch. There are 29 Run0
-batches and 26 Run1 batches per token, followed by one completion tick.
+The first ten-function batching attempt failed at phase 0 batch 8 (F056-F065).
+At failure sm=2^30, z0=255 and z47=0, so the F057 normalization divisor was
+nonzero. The exact failure point and server limit are still unmeasured.
+The new five-function batches split that range into batch 18 (F056-F060) and
+batch 19 (F061-F065). Do not resume a failed partial batch: use New Chat to reset.
+For this update import ONLY Run0, Run1 and Run0_1. Chat Next is byte-identical;
+keep its installed clock. HTSW currently fails to read back Housing's
+"Current: 5 Ticks (Less than 1 second)" lore, even though the clock runs live.
+
+Run0 and Run1 now run at most five original calculation functions per invocation.
+Chat Next repeats every five ticks and runs exactly one batch. There are 60 Run0
+batches and 54 Run1 batches per token, followed by one completion tick.
+The README simulator run measured at most 3,315 actions in one tick, down from
+6,553 with ten-call batches. This is not a measured live server limit.
+The three dispatchers share selectors for F000-F255 so five-call batches fit
+Housing's flat conditional limits. Run0/Run1 set ph only when ui_part=0 at pass
+entry; their internal cross-calls preserve ph. Run1 skips phase-zero embedding
+and KV-write batches, and finishes with Out. No new variables are needed.
 The exact 283/257 calculation calls and their order are preserved in
 model-passes.json. Only Run0, Run0_1 and Run1 changed among the original 292
 functions; the 289 initialization/math/output functions are unchanged.
@@ -95,7 +110,7 @@ variables. Accepted-word echoes avoid Housing's short substitution-string limit.
 Expected total: 300 functions, 1 menu with 43 buttons, 1 command, no events.
 The UI has about 803 stored actions: 622 helper actions (335 in Chat Load),
 180 menu-click actions and 1 command action. The three model dispatchers contain
-764 actions. These counts include conditionals but NOT both branches executed;
+603 actions. These counts include conditionals but NOT both branches executed;
 they are not fleet import work units. No additional function slots are needed.
 
 VALIDATION
