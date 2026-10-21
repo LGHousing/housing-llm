@@ -2,7 +2,7 @@
 
 Pass export folders oldest first; later folders override the same function.
 Only reuse older exports if those functions have not changed in the house.
-Exit 1 means the audit is incomplete or at least one file differs.
+Exit 1 means the audit is incomplete or has an unaccepted difference.
 """
 import argparse
 from collections import Counter
@@ -10,7 +10,14 @@ import difflib
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
+
+
+# Match only the operation field of an action, never text inside a value/chat.
+DIVISION_EXPORT = re.compile(
+    rb"^([ \t]*(?:(?:var|globalvar)[ \t]+\S+|teamvar[ \t]+\S+[ \t]+\S+)[ \t]+)"
+    rb"\xe2\x80\xa6/=(?=[ \t])", re.MULTILINE)
 
 
 def main():
@@ -18,6 +25,8 @@ def main():
     parser.add_argument("exports", type=Path, nargs="+")
     parser.add_argument("--revision", required=True)
     parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--accept-division-export", action="store_true",
+                        help="Accept only the confirmed …/= export spelling of Divide; retain raw diffs")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
 
@@ -45,8 +54,8 @@ def main():
                           export_sha256=hashlib.sha256(live).hexdigest())
             if live == source:
                 record["status"] = "exact"
-            elif b" \xe2\x80\xa6/= " in live and live.replace(b" \xe2\x80\xa6/= ", b" /= ") == source:
-                record["status"] = "division_unresolved"
+            elif DIVISION_EXPORT.sub(rb"\1/=", live) == source:
+                record["status"] = "division_accepted" if args.accept_division_export else "division_unresolved"
             else:
                 record["status"] = "mismatch"
             if record["status"] != "exact":
@@ -57,11 +66,12 @@ def main():
                 print(f"{record['status']}: {name}")
         records.append(record)
     counts = dict(Counter(r["status"] for r in records))
-    report = dict(revision=revision, counts=counts, functions=records)
+    report = dict(revision=revision, accept_division_export=args.accept_division_export,
+                  counts=counts, functions=records)
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(report, indent=2) + "\n")
     print(f"{revision}: {counts}; report: {args.report}")
-    return int(any(r["status"] != "exact" for r in records))
+    return int(any(r["status"] not in ("exact", "division_accepted") for r in records))
 
 
 if __name__ == "__main__":

@@ -64,8 +64,9 @@ An earlier count of 46 included 17 division-spelling differences in F161.
 F043, which writes the last T4 variable r65, matches exactly. F028's n95 writes
 match, but its 16 phase-one divisions export as "…/=" instead of "/=". HTSW
 v1.3.3 (fde9950d) defines only Divide, printed as "/="; this is not a recognized
-alternate division mode. Inspect the live Operation field before treating that
-export difference as harmless. F028 passing phase zero did not test those lines.
+alternate division mode. IMPORT subsequently inspected F028's live action and
+confirmed Divide / 96; the ellipsis is an export spelling quirk. F028 passing
+phase zero alone had not tested those lines.
 F161 has 17 similar division differences; it is already included in the repair.
 NAME FIX: the compiler now emits norm19 instead of n19. Its name screen also
 flags n190..n199, n16 and n160..n169; those become norm190..norm199, norm16 and
@@ -95,12 +96,13 @@ POST-IMPORT AUDIT (800cbe8)
 
 IMPORT job 7b977600 imported the 19 renamed functions under HTSW v1.3.4. Fresh
 exports contain no Kills and retain the new names. Sixteen match byte-for-byte;
-F161 still has 17 unresolved division spellings. Two exports contain actual
+F161 has 17 division spelling differences. Two exports contained actual
 math differences: F193 line 749 and F195 line 523 replace c += t with earlier
 t = constant actions. Inspect the actual editors to distinguish bad writes
 from bad exports: F193 conditional 15 THEN action 6; F195 conditional 10 ELSE
-action 19 (all positions one-based). Expected: Player, c, Increment,
-%var.player/t 0%, Automatic Unset off.
+action 19 (all positions one-based). IMPORT confirmed both wrong actions in
+the editor and repaired them to Player, c, Increment, %var.player/t 0%,
+Automatic Unset off. Fresh full exports still need to confirm both repairs.
 
 After LG's deploy GO, verify those actions directly, then repair just the two
 confirmed mistakes through a fresh live scan and targeted import or editor
@@ -108,20 +110,24 @@ changes. Re-export to verify. Deleting/recreating entire functions is a fallback
 not the first repair; it repeats thousands of writes through the same importer.
 Audit all 300 functions before relying on the model. Unchanged, already-verified
 exports can be reused. Do not treat a successful import status as a full read-back.
-Inspect Divide in F028 conditional 23 ELSE action 14 and F161 conditional 23
-ELSE action 11. HTSW v1.3.4 still prints Divide as /=, so the repeated …/= output
-is not evidence of a harmless alternate mode. Keep these differences unresolved
-until the actual operation and export path have been checked.
+IMPORT inspected F028 conditional 23 ELSE action 14 under HTSW v1.3.5:
+Player, ss, Divide, 96. This confirms the …/= export spelling represents Divide
+there. The same spelling-only difference can now be accepted explicitly by the
+audit; all other bytes must still match. Raw export hashes and diffs are retained.
 
 Strict local audit (does not access or modify the live house):
-  python3 ref/audit_live.py --revision 800cbe8 --report build/live-audit.json \
+  python3 ref/audit_live.py --revision 800cbe8 --accept-division-export \
+    --report build/live-audit.json \
     /home/opc/housing-llm-live/800 /path/to/newer/exports
 Each folder contains <function name>.live.htsl; later folders override earlier
 ones. Only reuse an earlier export if that function has not changed live since.
 The report records source/export hashes, all missing functions and exact diffs.
-Division-only differences are classified separately but still fail the audit.
-Exit 0 requires all 300 functions to match byte-for-byte; exit 1 means incomplete
-or unresolved. This checks file contents, not whether the exporter read correctly.
+Default behavior remains strict: division-only differences are unresolved and
+fail. --accept-division-export accepts only …/= in an action's operation field,
+reports division_accepted separately from exact, and records that choice in JSON.
+Values, other operations and text are not normalized. Exit 0 requires all 300
+functions to be exact or explicitly accepted division-only matches; exit 1 means
+incomplete or unresolved. This checks files, not whether the exporter read correctly.
 
 The five-call batching update changed ONLY Run0, Run1 and Run0_1. Keep Chat Next's
 installed clock. IMPORT reports HTSW v1.3.3 fixes the previous repeat-interval

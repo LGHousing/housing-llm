@@ -80,6 +80,15 @@ same branch; IMPORT handles live smoke testing and existing event actions.
 
 ## Ledger
 
+- 2026-10-21: IMPORT confirmed the F193/F195 wrong actions directly in Housing
+  and repaired them manually; fresh full exports pending. F028's actual setting
+  is Player, ss, Divide, 96, confirming the ellipsis division export quirk.
+  Add opt-in --accept-division-export to the audit: normalize only the operation
+  field, retain raw hashes/diffs, distinguish division_accepted from exact, and
+  record the flag in JSON. Default remains strict. Checked both modes on the
+  19 original exports; F193/F195 still fail, missing coverage still fails, and
+  changes to operands or string contents are not hidden. No importable changes.
+
 - 2026-10-21: IMPORT job 7b977600 applied 800cbe8's 19 functions; new names
   survive export. Sixteen match exactly, F161 has 17 unresolved division
   spellings, F193 line 749 and F195 line 523 have substituted assignment actions.
