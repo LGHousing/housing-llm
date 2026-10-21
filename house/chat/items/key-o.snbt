@@ -1,1 +1,1 @@
-{id:"minecraft:skull",Count:1b,Damage:3s,tag:{display:{Name:"§f§lO"},SkullOwner:{Id:"ac7938cb-5e89-5fca-b248-00f83e61a4ea",Properties:{textures:[{Value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDExZGUxY2FkYjJhZGU2MTE0OWU1ZGVkMWJkODg1ZWRmMGRmNjI1OTI1NWIzM2I1ODdhOTZmOTgzYjJhMSJ9fX0="}]}}}}
+{id:"minecraft:wool",Count:1b,Damage:3s,tag:{display:{Name:"§f§lO"}}}

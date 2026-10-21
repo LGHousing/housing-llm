@@ -74,7 +74,7 @@ assert.equal(sim.findFunctionImportable("Chat Next").repeatTicks, 5);
 for (let i = 0; i < 26; i++) {
     const slot = manifest.menus[0].slots.find(s => s.slot === i);
     const nbt = fs.readFileSync(path.join(dir, slot.nbt), "utf8");
-    assert(nbt.includes('minecraft:skull') && nbt.includes('SkullOwner') && nbt.includes('Damage:3s'));
+    assert(nbt.includes('minecraft:wool') && !nbt.includes('SkullOwner') && nbt.includes('Damage:3s'));
     assert(!nbt.includes('Lore'));
 }
 assert(!("<unk>" in ui.punctuation));

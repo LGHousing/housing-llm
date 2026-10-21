@@ -80,6 +80,13 @@ same branch; IMPORT handles live smoke testing and existing event actions.
 
 ## Ledger
 
+- 2026-10-20: IMPORT job ffe236d6 failed to creative-spawn the custom skull A.
+  Replace only the 26 alphabet item payloads with light-blue wool named A–Z;
+  keep every slot, click action, function and variable unchanged. Remove the
+  unused texture asset/UUID code and update the existing item assertion.
+  HTSW's importer validates item ID/damage/count/name after creative injection;
+  wool is an ordinary supported item. Use a menu-only retry for this fallback.
+
 - 2026-10-20: IMPORT reproduced the live failure in standalone Run0; Init alone
   succeeds. Replaced only Run0 / Run0_1 / Run1 dispatchers with ten-function
   batches, driven by Chat Next every five ticks. Original 283/257 calls remain

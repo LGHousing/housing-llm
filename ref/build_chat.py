@@ -13,7 +13,6 @@ import json
 from pathlib import Path
 import re
 import shutil
-import uuid
 
 K = 7
 BITS = 9
@@ -249,20 +248,13 @@ closeMenu''')
     if not manifest["events"]:
         del manifest["events"]
 
-    heads = json.loads(Path(__file__).with_name("letter-heads.json").read_text())
-    assert set(heads) == set(string.ascii_lowercase)
-
-    def item(key, label, material="paper", damage=0, letter=None):
+    def item(key, label, material="paper", damage=0):
         tag = '{display:{Name:' + json.dumps(label, ensure_ascii=False) + '}'
-        if letter:
-            value = heads[letter]["value"]
-            owner = str(uuid.uuid5(uuid.NAMESPACE_URL, value))
-            tag += ',SkullOwner:{Id:' + json.dumps(owner) + ',Properties:{textures:[{Value:' + json.dumps(value) + '}]}}'
         return write(f"items/{key}.snbt", '{id:"minecraft:' + material
             + f'",Count:1b,Damage:{damage}s,tag:' + tag + '}}')
 
-    def slot(index, key, label, actions, material="paper", damage=0, letter=None):
-        return dict(slot=index, nbt=item(key, label, material, damage, letter), actions=actions)
+    def slot(index, key, label, actions, material="paper", damage=0):
+        return dict(slot=index, nbt=item(key, label, material, damage), actions=actions)
 
     # All seven 9-bit token IDs fit in one nonnegative 63-bit Long.
     # Dynamic numeric placeholders have commas; L casts undo that formatting.
@@ -381,7 +373,7 @@ function "Feed"
     for i, letter in enumerate(string.ascii_lowercase):
         action = write(f"actions/key-{letter}.htsl", key_guard + f'var ui_key = {i+1} false\nfunction "Chat Keys"')
         slots.append(slot(i, "key-" + letter, "§f§l" + letter.upper(), action,
-                          material="skull", damage=3, letter=letter))
+                          material="wool", damage=3))
     for i, value, label, key in [(26, -1, "§eBackspace", "backspace"),
                                   (27, -2, "§eClear letters: §f%var.team/ui_p V%", "clear")]:
         action = write(f"actions/{key}.htsl", key_guard + f'var ui_key = {value} false\nfunction "Chat Keys"')

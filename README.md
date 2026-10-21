@@ -30,9 +30,10 @@ functions are unchanged. This conservative first-live-test setting takes roughly
 14 seconds per token. The old full Run0 pass failed live; the exact Housing limit
 still needs measuring. The generated 228-entry lookup fits in team V storage.
 
-Letter buttons use oak letter heads; suggestion buttons show only the word.
-IMPORT verified that variable item names refresh in-game. Letter-head appearance
-and the newly split calculation still need a live smoke test. Regenerate with
+Letter buttons use light-blue wool named A–Z; suggestion buttons show only the word.
+IMPORT verified that variable item names refresh in-game. The newly split calculation
+still needs a live smoke test. Custom skull spawning failed live, so the keypad
+uses ordinary named blocks; letters appear in their hover names. Regenerate with
 `python3 ref/build_chat.py` after building a matching model/vocabulary.
 
 Check the full build and reproduce the example through actual menu clicks:

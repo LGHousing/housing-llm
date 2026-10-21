@@ -16,7 +16,8 @@ Backspace removes a letter; Clear letters clears the current prefix (shown on
 that button). These do not undo accepted words. Send prints the full reply,
 one word per line. There is no free-text box or multi-turn history.
 
-The alphabet uses oak letter heads, New Chat is blue, Send green, End Chat red.
+The alphabet uses light-blue wool blocks named A–Z (letters show on hover).
+New Chat is blue, Send green, End Chat red.
 Suggestions show just the word. Five punctuation buttons offer ? . , ! and '.
 There is no <unk> button or item lore. All 501 alphabet words are reachable with
 at most three letters. Empty matches show dashes. Allow a quarter second between
@@ -65,10 +66,11 @@ probe is unused and may be unset. Do not reset player variable 18469 or replace
 guh's existing Join/Quit events. Do not clear the model/team storage wholesale.
 
 IMPORT verified dynamic item-name placeholders refresh on menu reopen. Custom
-skull SNBT is supported by HTSW's vanilla ItemStack loader; its appearance in
-Housing still needs the fleet's live smoke test. Texture values and source links
-are stored in ref/letter-heads.json (Minecraft-Heads oak font / MCHeads mirror).
-If Housing strips skull textures, named paper letters are the closest fallback.
+skull spawning failed live on the A key: HTSW observed an empty slot after the
+creative packet. The fallback uses minecraft:wool, Damage:3s, Count:1b and only
+a display name, without texture/profile NBT. HTSW accepts wool and compares its
+item ID, damage, count and name on read-back. Import only LLM Keypad to apply
+this fallback; functions, actions, layout and variable state are unchanged.
 
 GENERATED LOOKUP AND IMPORT SIZE
 
