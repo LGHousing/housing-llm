@@ -651,10 +651,10 @@ if (var ph == 0) {
     teamvar n15 T4 >>= 43 false
     var c -= %var.team/n15 T4% false
     var c >>= 21 false
-    teamvar n16 T4 = %var.player/c 0% false
-    teamvar n16 T4 <<= 43 false
-    teamvar n16 T4 >>= 43 false
-    var c -= %var.team/n16 T4% false
+    teamvar norm16 T4 = %var.player/c 0% false
+    teamvar norm16 T4 <<= 43 false
+    teamvar norm16 T4 >>= 43 false
+    var c -= %var.team/norm16 T4% false
     var c >>= 21 false
     teamvar n17 T4 = %var.player/c 0% false
     var c = 131941384847399 false

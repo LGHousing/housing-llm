@@ -870,8 +870,8 @@ if (var ph == 0) {
     teamvar n15 T4 >>= 43 false
     var c -= %var.team/n15 T4% false
     var c >>= 21 false
-    teamvar n16 T4 = %var.player/c 0% false
-    teamvar n16 T4 <<= 43 false
+    teamvar norm16 T4 = %var.player/c 0% false
+    teamvar norm16 T4 <<= 43 false
 } else {
     var c += %var.player/t 0% false
     var t = -74766700511253 false
@@ -900,18 +900,18 @@ if (var ph == 0) {
     var c += %var.player/t 0% false
 }
 if (var ph == 0) {
-    teamvar n16 T4 >>= 43 false
-    var c -= %var.team/n16 T4% false
+    teamvar norm16 T4 >>= 43 false
+    var c -= %var.team/norm16 T4% false
     var c >>= 21 false
     teamvar n17 T4 = %var.player/c 0% false
     teamvar n15 T4 *= 11746498 false
     teamvar n15 T4 += 8388608 false
     teamvar n15 T4 >>= 24 false
     var h15 += %var.team/n15 T4% false
-    teamvar n16 T4 *= 10006914 false
-    teamvar n16 T4 += 8388608 false
-    teamvar n16 T4 >>= 24 false
-    var h16 += %var.team/n16 T4% false
+    teamvar norm16 T4 *= 10006914 false
+    teamvar norm16 T4 += 8388608 false
+    teamvar norm16 T4 >>= 24 false
+    var h16 += %var.team/norm16 T4% false
     teamvar n17 T4 *= 16388715 false
     teamvar n17 T4 += 8388608 false
     teamvar n17 T4 >>= 24 false

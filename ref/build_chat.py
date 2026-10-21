@@ -13,6 +13,7 @@ import json
 from pathlib import Path
 import re
 import shutil
+from variable_names import check_htsl_names
 
 K = 7
 BITS = 9
@@ -24,6 +25,8 @@ FUNCTIONS = ("Feed", "Reply", "New Chat", "Chat Next", "Chat Load", "Chat Keys",
 
 
 def build(house):
+    for path in house.rglob("*.htsl"):
+        check_htsl_names(path.read_text())
     vocab = json.loads((house / "vocab.json").read_text())
     assert vocab[:6] == ["<pad>", "<unk>", "<bos>", "<user>", "<bot>", "<eos>"]
     assert len(set(vocab)) == len(vocab)
@@ -80,6 +83,8 @@ def build(house):
         shutil.rmtree(out)
 
     def write(name, text):
+        if name.endswith(".htsl"):
+            check_htsl_names(text)
         file = out / name
         file.parent.mkdir(parents=True, exist_ok=True)
         file.write_text(text.strip() + "\n")

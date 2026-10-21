@@ -573,12 +573,12 @@ if (var ph == 0) {
     teamvar n159 T8 >>= 43 false
     var c -= %var.team/n159 T8% false
     var c >>= 21 false
-    teamvar n160 T8 = %var.player/c 0% false
-    teamvar n160 T8 <<= 43 false
-    teamvar n160 T8 >>= 43 false
-    var c -= %var.team/n160 T8% false
+    teamvar norm160 T8 = %var.player/c 0% false
+    teamvar norm160 T8 <<= 43 false
+    teamvar norm160 T8 >>= 43 false
+    var c -= %var.team/norm160 T8% false
     var c >>= 21 false
-    teamvar n161 T8 = %var.player/c 0% false
+    teamvar norm161 T8 = %var.player/c 0% false
     var t = %var.team/n159 T8% false
 }
 if (var ph == 0) {
@@ -619,7 +619,7 @@ if (var ph == 0) {
     var s2 -= %var.player/bi 0% false
     var s2 &= %var.player/u 0% false
     var bi += %var.player/s2 0% false
-    var t = %var.team/n160 T8% false
+    var t = %var.team/norm160 T8% false
     var t -= %var.player/best 0% false
     var u = %var.player/t 0% false
     var u -= 1 false
@@ -631,7 +631,7 @@ if (var ph == 0) {
     var s2 -= %var.player/bi 0% false
     var s2 &= %var.player/u 0% false
     var bi += %var.player/s2 0% false
-    var t = %var.team/n161 T8% false
+    var t = %var.team/norm161 T8% false
     var t -= %var.player/best 0% false
 }
 if (var ph == 0) {
@@ -1266,9 +1266,9 @@ if (var ph == 0) {
     var t = 74766780203009 false
     var t *= %var.player/x95 0% false
     var c += %var.player/t 0% false
-    teamvar n162 T8 = %var.player/c 0% false
-    teamvar n162 T8 <<= 43 false
-    teamvar n162 T8 >>= 43 false
+    teamvar norm162 T8 = %var.player/c 0% false
+    teamvar norm162 T8 <<= 43 false
+    teamvar norm162 T8 >>= 43 false
 }
 if (var ph == 0) {
     var t *= %var.team/r116 T5% false
@@ -1297,15 +1297,15 @@ if (var ph == 0) {
     var t = 61572613406694 false
     var t *= %var.team/r124 T5% false
 } else {
-    var c -= %var.team/n162 T8% false
+    var c -= %var.team/norm162 T8% false
     var c >>= 21 false
-    teamvar n163 T8 = %var.player/c 0% false
-    teamvar n163 T8 <<= 43 false
-    teamvar n163 T8 >>= 43 false
-    var c -= %var.team/n163 T8% false
+    teamvar norm163 T8 = %var.player/c 0% false
+    teamvar norm163 T8 <<= 43 false
+    teamvar norm163 T8 >>= 43 false
+    var c -= %var.team/norm163 T8% false
     var c >>= 21 false
-    teamvar n164 T8 = %var.player/c 0% false
-    var t = %var.team/n162 T8% false
+    teamvar norm164 T8 = %var.player/c 0% false
+    var t = %var.team/norm162 T8% false
     var t -= %var.player/best 0% false
     var u = %var.player/t 0% false
     var u -= 1 false
@@ -1317,7 +1317,7 @@ if (var ph == 0) {
     var s2 -= %var.player/bi 0% false
     var s2 &= %var.player/u 0% false
     var bi += %var.player/s2 0% false
-    var t = %var.team/n163 T8% false
+    var t = %var.team/norm163 T8% false
     var t -= %var.player/best 0% false
     var u = %var.player/t 0% false
     var u -= 1 false

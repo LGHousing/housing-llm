@@ -233,7 +233,7 @@ if (var ph == 0) {
     var c >>= 21 false
     var g2 = %var.player/c 0% false
     teamvar n15 T4 += %var.player/g0 0% false
-    teamvar n16 T4 += %var.player/g1 0% false
+    teamvar norm16 T4 += %var.player/g1 0% false
     teamvar n17 T4 += %var.player/g2 0% false
     teamvar n15 T4 *= 17208556 false
 } else {
@@ -267,10 +267,10 @@ if (var ph == 0) {
     teamvar n15 T4 += 8388608 false
     teamvar n15 T4 >>= 24 false
     var h15 += %var.team/n15 T4% false
-    teamvar n16 T4 *= 19289144 false
-    teamvar n16 T4 += 8388608 false
-    teamvar n16 T4 >>= 24 false
-    var h16 += %var.team/n16 T4% false
+    teamvar norm16 T4 *= 19289144 false
+    teamvar norm16 T4 += 8388608 false
+    teamvar norm16 T4 >>= 24 false
+    var h16 += %var.team/norm16 T4% false
     teamvar n17 T4 *= 20335578 false
     teamvar n17 T4 += 8388608 false
     teamvar n17 T4 >>= 24 false

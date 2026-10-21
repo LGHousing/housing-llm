@@ -40,15 +40,15 @@ if (var ph == 0) {
     var t = 184717903134724 false
     var t *= %var.player/x95 0% false
     var c += %var.player/t 0% false
-    teamvar n168 T8 = %var.player/c 0% false
-    teamvar n168 T8 <<= 43 false
-    teamvar n168 T8 >>= 43 false
-    var c -= %var.team/n168 T8% false
+    teamvar norm168 T8 = %var.player/c 0% false
+    teamvar norm168 T8 <<= 43 false
+    teamvar norm168 T8 >>= 43 false
+    var c -= %var.team/norm168 T8% false
     var c >>= 21 false
-    teamvar n169 T8 = %var.player/c 0% false
-    teamvar n169 T8 <<= 43 false
-    teamvar n169 T8 >>= 43 false
-    var c -= %var.team/n169 T8% false
+    teamvar norm169 T8 = %var.player/c 0% false
+    teamvar norm169 T8 <<= 43 false
+    teamvar norm169 T8 >>= 43 false
+    var c -= %var.team/norm169 T8% false
     var c >>= 21 false
 }
 if (var ph == 0) {
@@ -79,7 +79,7 @@ if (var ph == 0) {
     var t = -65970682986466 false
 } else {
     teamvar n170 T8 = %var.player/c 0% false
-    var t = %var.team/n168 T8% false
+    var t = %var.team/norm168 T8% false
     var t -= %var.player/best 0% false
     var u = %var.player/t 0% false
     var u -= 1 false
@@ -91,7 +91,7 @@ if (var ph == 0) {
     var s2 -= %var.player/bi 0% false
     var s2 &= %var.player/u 0% false
     var bi += %var.player/s2 0% false
-    var t = %var.team/n169 T8% false
+    var t = %var.team/norm169 T8% false
     var t -= %var.player/best 0% false
     var u = %var.player/t 0% false
     var u -= 1 false

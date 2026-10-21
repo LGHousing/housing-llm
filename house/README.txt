@@ -46,10 +46,10 @@ At failure sm=2^30, z0=255 and z47=0, so the F057 normalization divisor was
 nonzero. With five-function batches, batch 18 (F056-F060) passed and batch 19
 (F061-F065) failed. Individual calls isolated the failure to F063. A read-only
 live export then showed six write targets changed from team n19 on T4 to Kills;
-all other lines matched the source. This confirms an import mismatch, not its
-cause or the server's execution limit. Further batch reduction is not justified
-by that failure. Do not resume a failed partial batch: use New Chat to reset
-after IMPORT finishes examining the preserved diagnostic state.
+all other lines matched the source. IMPORT then confirmed the cause directly:
+typing n19 in the Variable editor produces "The stat key provided contains
+blocked words! (1)" and leaves the default Kills. This is a filtered name, not
+evidence of a storage or execution limit. HTSW did not detect the refusal.
 
 Source T4 uses exactly 300 Long variables: 60 KV-cache values (V0_36_6 through
 V0_47_6 and V0_0_7 through V0_47_7), o18..o95 (78), n0..n95 (96), r0..r65 (66).
@@ -59,20 +59,41 @@ against its assumed 2,560-byte budget; 300 is not a verified Housing name limit.
 Existing extra live variables could consume that margin. F063's n20..n23 write
 targets are correct, so the export does not show a blanket failure of later names.
 All n19 references occur in F016, F063, F113, F160, F161 and F168. Live exports
-confirm the same substitution in all six (46 changed write targets total).
+confirm the same substitution in all six (29 changed write targets total).
+An earlier count of 46 included 17 division-spelling differences in F161.
 F043, which writes the last T4 variable r65, matches exactly. F028's n95 writes
 match, but its 16 phase-one divisions export as "…/=" instead of "/=". HTSW
 v1.3.3 (fde9950d) defines only Divide, printed as "/="; this is not a recognized
 alternate division mode. Inspect the live Operation field before treating that
 export difference as harmless. F028 passing phase zero did not test those lines.
-Next: IMPORT checks a fresh n19 assignment by exporting before running it, then
-checks that writing 1 succeeds. Repair the six affected functions only after
-that succeeds, and export again to verify the names. Start a fresh chat afterward.
-Keep source calculation and holder allocation unchanged pending that check.
+F161 has 17 similar division differences; it is already included in the repair.
+NAME FIX: the compiler now emits norm19 instead of n19. Its name screen also
+flags n190..n199, n16 and n160..n169; those become norm190..norm199, norm16 and
+norm160..norm169 as a precaution. Only n19 is confirmed blocked. F062 used n16
+successfully live. The heuristic recognizes common digit-to-letter substitutions;
+it cannot reproduce Hypixel's private filter, so verify new names by live export.
+Internal tensor names, holder assignment, math and call order are unchanged.
+Both compiler reads and writes use the same aliases. Unexpected suspicious names
+and alias collisions fail the build; the keypad generator screens HTSL keys too.
 
-The five-call batching update changed ONLY Run0, Run1 and Run0_1. Chat Next is byte-identical;
-keep its installed clock. HTSW currently fails to read back Housing's
-"Current: 5 Ticks (Less than 1 second)" lore, even though the clock runs live.
+Import ONLY these 19 functions from the name-fix build:
+F015 F016 F062 F063 F111 F112 F113 F158 F159 F160 F161 F167 F168
+F193 F194 F195 F198 F199 F200
+Then export them back and verify the exact keys before a fresh New Chat.
+F028, Chat Next, the keypad and all other executable files are byte-identical.
+No extra functions, actions or logical variables are added.
+
+Before starting a fresh chat, stop old work by clearing global ui_owner. Remove
+obsolete model keys if present: T4 n16/n19; T8 n160..n169 and n190..n199. Retained
+old keys consume storage; keeping all 20 on T8 would consume the compiler's
+entire 160-byte margin once the replacements are written. Delete existing keys
+through the variable editor if their names cannot be entered in an unset action.
+Do not clear whole teams, Kills, the house's event variables, or player 18469.
+New Chat writes the replacement values before reading them; Init is unchanged.
+
+The five-call batching update changed ONLY Run0, Run1 and Run0_1. Keep Chat Next's
+installed clock. IMPORT reports HTSW v1.3.3 fixes the previous repeat-interval
+read-back problem; the name fix does not require a clock re-import.
 
 Run0 and Run1 now run at most five original calculation functions per invocation.
 Chat Next repeats every five ticks and runs exactly one batch. There are 60 Run0
@@ -84,8 +105,9 @@ Housing's flat conditional limits. Run0/Run1 set ph only when ui_part=0 at pass
 entry; their internal cross-calls preserve ph. Run1 skips phase-zero embedding
 and KV-write batches, and finishes with Out. No new variables are needed.
 The exact 283/257 calculation calls and their order are preserved in
-model-passes.json. Only Run0, Run0_1 and Run1 changed among the original 292
-functions; the 289 initialization/math/output functions are unchanged.
+model-passes.json. Relative to the original 292 functions, three dispatchers
+are batched and 19 calculation functions have variable-name substitutions.
+The remaining 270 functions are unchanged.
 
 Feed enqueues a token instead of running a long chain. Loading uses 13 small
 lookup batches (20 assignments each), then Init_0, Init_1, Init_2 and Vocab on

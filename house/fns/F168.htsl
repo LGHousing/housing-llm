@@ -416,10 +416,10 @@ if (var ph == 0) {
     teamvar n18 T4 >>= 43 false
     var c -= %var.team/n18 T4% false
     var c >>= 21 false
-    teamvar n19 T4 = %var.player/c 0% false
-    teamvar n19 T4 <<= 43 false
-    teamvar n19 T4 >>= 43 false
-    var c -= %var.team/n19 T4% false
+    teamvar norm19 T4 = %var.player/c 0% false
+    teamvar norm19 T4 <<= 43 false
+    teamvar norm19 T4 >>= 43 false
+    var c -= %var.team/norm19 T4% false
     var c >>= 21 false
 }
 if (var ph == 0) {
@@ -462,7 +462,7 @@ if (var ph == 0) {
     var s2 -= %var.player/bi 0% false
     var s2 &= %var.player/u 0% false
     var bi += %var.player/s2 0% false
-    var t = %var.team/n19 T4% false
+    var t = %var.team/norm19 T4% false
     var t -= %var.player/best 0% false
     var u = %var.player/t 0% false
     var u -= 1 false

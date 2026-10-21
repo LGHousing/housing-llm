@@ -25,12 +25,17 @@ recovery and import notes, limits, and the manual model interface.
 The UI adds eight helpers, one 43-button menu, and one command. It does not
 replace the house's Join/Quit events. New Chat and End Chat can recover any busy
 state, including an abandoned player's question. The model's three dispatchers
-now split each token into 114 batches, spaced five ticks apart; its 289 other
-functions are unchanged. This smaller-batch setting takes roughly
+now split each token into 114 batches, spaced five ticks apart. Nineteen math
+functions use neutral names for keys that may trip Housing's filter; the other
+270 model functions are unchanged. This smaller-batch setting takes roughly
 29 seconds per token. The old full Run0 pass failed live; the exact Housing limit
 still needs measuring. The generated 228-entry lookup fits in team V storage.
 
 Letter buttons use light-blue wool named A–Z; suggestion buttons show only the word.
+The compiler screens variable names for common filter risks. IMPORT confirmed
+Housing blocks `n19` and silently retains the default `Kills`; the build now
+uses `norm19` and neutral names for 21 similar keys. See `house/README.txt` for
+the exact functions to repair and obsolete-key cleanup.
 IMPORT verified that variable item names refresh in-game. The newly split calculation
 still needs a live smoke test. Custom skull spawning failed live, so the keypad
 uses ordinary named blocks; letters appear in their hover names. Regenerate with

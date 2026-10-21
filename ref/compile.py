@@ -16,6 +16,7 @@ Layout rules (Housing limits):
 import json, math, os, sys
 import numpy as np
 from intmodel import S, Q, NEWTON_ITERS, EXP_SQUARINGS, PROB_MAX
+from variable_names import housing_name
 
 LANE = 21
 LANE_MAX = (1 << (LANE - 1)) - 1
@@ -33,6 +34,8 @@ COND_VARS = ("ph", "ps", "tk", "pb")
 class Holders:
     """Assign every var to player, global or a team (T1, T2, ...), <= PLAYER_MAX each."""
     def __init__(self, names_in_order):
+        self.names = {n: housing_name(n) for n in names_in_order}
+        assert len({n.lower() for n in self.names.values()}) == len(self.names), "Housing variable alias collision"
         scalars = set(COND_VARS) | {"t", "m", "u", "c", "s2", "ss", "ry", "mx", "sm", "es", "best", "bi",
                                     "tok", "pos", "lsh", "g0", "g1", "g2"}
         hot = [n for n in names_in_order if n in scalars or (n[0] == "e" and n[1:].isdigit())]
@@ -55,6 +58,7 @@ class Holders:
 
     def read(self, n):
         h = self.of[n]
+        n = self.names[n]
         if h[0] == "player":
             v = f"%var.player/{n} 0%"      # " 0": unset reads as "" otherwise
         elif h[0] == "global":
@@ -69,6 +73,7 @@ class Holders:
         if isinstance(val, str):
             val = self.read(val)
         h = self.of[var]
+        var = self.names[var]
         head = {"player": f"var {var}", "global": f"globalvar {var}"}.get(h[0]) or f"teamvar {var} {h[1]}"
         return f"{head} {op} {val} false"
 

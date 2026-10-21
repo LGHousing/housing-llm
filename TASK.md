@@ -80,6 +80,20 @@ same branch; IMPORT handles live smoke testing and existing event actions.
 
 ## Ledger
 
+- 2026-10-21: IMPORT confirmed Hypixel rejects n19 as a blocked stat key and
+  retains Kills; HTSW missed the refusal. Alias n19 -> norm19 in compiler reads
+  and writes. Screen all emitted keys with conservative digit substitution;
+  also alias n16, n160..n169, n190..n199 as precautions (only n19 confirmed).
+  Reject unexpected suspect names and alias collisions. Regenerated 19 functions
+  with exact name substitutions only; every other executable artifact, including
+  Chat Next and F028, is byte-identical. All 318,761 math actions match compiler
+  rendering, holder allocation unchanged, full HTSW check and keypad simulator
+  pass with the exact README reply. Document old T4/T8 key cleanup to preserve
+  storage headroom. IMPORT handles verification by live export and smoke test;
+  F028 division inspection remains pending. Correct the previous export count:
+  29 writes became Kills; F161's other 17 differences are division spellings,
+  not n19 substitutions. F161 is already included in the name repair.
+
 - 2026-10-20: Remaining live exports confirm all six n19 functions have the
   same substitution (46 writes total); F043/r65 matches exactly. F028 has 16
   division spelling differences, all in phase one: `/=` becomes `…/=`.
