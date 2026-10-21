@@ -65,6 +65,10 @@ also clears the owner and busy state. Team V ph_t="world" from the placeholder
 probe is unused and may be unset. Do not reset player variable 18469 or replace
 guh's existing Join/Quit events. Do not clear the model/team storage wholesale.
 
+HOUSING ITEM RULE (Callan): never generate custom player heads or
+SkullOwner/textures NBT. Housing permits only its own built-in skulls in menus
+and items. Keep the named wool alphabet; do not retry custom head textures.
+
 IMPORT verified dynamic item-name placeholders refresh on menu reopen. Custom
 skull spawning failed live on the A key: HTSW observed an empty slot after the
 creative packet. The fallback uses minecraft:wool, Damage:3s, Count:1b and only

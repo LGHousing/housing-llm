@@ -370,6 +370,8 @@ function "Feed"
     # Busy clicks must not consume Chat Keys' cooldown just before the scheduler
     # uses it to refresh the menu after finishing a token.
     key_guard = 'if (!var ui_phase == 0 5) {\n    exit\n}\n'
+    # Callan: never generate custom player heads / SkullOwner texture NBT.
+    # Only Housing's built-in skulls are supported; keep letters as named wool.
     for i, letter in enumerate(string.ascii_lowercase):
         action = write(f"actions/key-{letter}.htsl", key_guard + f'var ui_key = {i+1} false\nfunction "Chat Keys"')
         slots.append(slot(i, "key-" + letter, "§f§l" + letter.upper(), action,
