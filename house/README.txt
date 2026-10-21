@@ -91,6 +91,38 @@ through the variable editor if their names cannot be entered in an unset action.
 Do not clear whole teams, Kills, the house's event variables, or player 18469.
 New Chat writes the replacement values before reading them; Init is unchanged.
 
+POST-IMPORT AUDIT (800cbe8)
+
+IMPORT job 7b977600 imported the 19 renamed functions under HTSW v1.3.4. Fresh
+exports contain no Kills and retain the new names. Sixteen match byte-for-byte;
+F161 still has 17 unresolved division spellings. Two exports contain actual
+math differences: F193 line 749 and F195 line 523 replace c += t with earlier
+t = constant actions. Inspect the actual editors to distinguish bad writes
+from bad exports: F193 conditional 15 THEN action 6; F195 conditional 10 ELSE
+action 19 (all positions one-based). Expected: Player, c, Increment,
+%var.player/t 0%, Automatic Unset off.
+
+After LG's deploy GO, verify those actions directly, then repair just the two
+confirmed mistakes through a fresh live scan and targeted import or editor
+changes. Re-export to verify. Deleting/recreating entire functions is a fallback,
+not the first repair; it repeats thousands of writes through the same importer.
+Audit all 300 functions before relying on the model. Unchanged, already-verified
+exports can be reused. Do not treat a successful import status as a full read-back.
+Inspect Divide in F028 conditional 23 ELSE action 14 and F161 conditional 23
+ELSE action 11. HTSW v1.3.4 still prints Divide as /=, so the repeated …/= output
+is not evidence of a harmless alternate mode. Keep these differences unresolved
+until the actual operation and export path have been checked.
+
+Strict local audit (does not access or modify the live house):
+  python3 ref/audit_live.py --revision 800cbe8 --report build/live-audit.json \
+    /home/opc/housing-llm-live/800 /path/to/newer/exports
+Each folder contains <function name>.live.htsl; later folders override earlier
+ones. Only reuse an earlier export if that function has not changed live since.
+The report records source/export hashes, all missing functions and exact diffs.
+Division-only differences are classified separately but still fail the audit.
+Exit 0 requires all 300 functions to match byte-for-byte; exit 1 means incomplete
+or unresolved. This checks file contents, not whether the exporter read correctly.
+
 The five-call batching update changed ONLY Run0, Run1 and Run0_1. Keep Chat Next's
 installed clock. IMPORT reports HTSW v1.3.3 fixes the previous repeat-interval
 read-back problem; the name fix does not require a clock re-import.

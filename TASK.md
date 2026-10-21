@@ -80,6 +80,16 @@ same branch; IMPORT handles live smoke testing and existing event actions.
 
 ## Ledger
 
+- 2026-10-21: IMPORT job 7b977600 applied 800cbe8's 19 functions; new names
+  survive export. Sixteen match exactly, F161 has 17 unresolved division
+  spellings, F193 line 749 and F195 line 523 have substituted assignment actions.
+  Requested direct editor inspection before trusting bulk exports; targeted
+  repair and re-export if confirmed, followed by audit coverage of all 300
+  functions after LG's GO. Added strict read-only ref/audit_live.py pinned to an
+  explicit commit, with hashes, missing coverage and division differences kept
+  unresolved. Checked against the 19 actual exports: 16 exact, 1 division-only,
+  2 other mismatches, 281 missing. No model/importable changes in this update.
+
 - 2026-10-21: IMPORT confirmed Hypixel rejects n19 as a blocked stat key and
   retains Kills; HTSW missed the refusal. Alias n19 -> norm19 in compiler reads
   and writes. Screen all emitted keys with conservative digit substitution;
