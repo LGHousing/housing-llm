@@ -80,6 +80,25 @@ same branch; IMPORT handles live smoke testing and existing event actions.
 
 ## Ledger
 
+- 2026-10-22: LIVE KEYPAD CHAT PASSED in guh, reported by IMPORT. /llm ->
+  New Chat -> "Choose words, then Send." -> do, you, like, cats, ? -> Send
+  streamed exactly "i enjoy them , they make me feel happy ." from 07:22:29
+  to 07:27:15 UTC. Feeding a word takes about 30 seconds; the keypad replies
+  "Please wait" during processing. Output words arrived about 20-40 seconds
+  apart. This validates the 800cbe8 build after repairs to the live import.
+  The full 300-function audit, exported serially with HTSW v1.3.7, found 10
+  additional copied actions replacing c += t: F040 x2, F092, F100, F119 x2,
+  F135, F136, F221 and F225, beyond the earlier F193/F195 repairs. IMPORT fixed
+  them in the editor and re-exported; the affected functions match 800cbe8
+  exactly. Remaining flags were print-format only: division spelling, empty
+  IF branches in F030/F238/F255 (empty in both), and UI/dispatcher quoting and
+  false flags. Earlier missing keys/conditions/actions were reader gaps, not
+  live damage at the inspected locations. Old T4 n16/n19 and T8 n160..n169,
+  n190..n199 keys remain; cleanup is optional and was not needed for this pass.
+  Updated README and house instructions; no executable changes or live actions
+  by this agent. Branch remains feat/chat-ui, pushed without merge; Callan
+  decides merging.
+
 - 2026-10-21: IMPORT confirmed the F193/F195 wrong actions directly in Housing
   and repaired them manually; fresh full exports pending. F028's actual setting
   is Player, ss, Divide, 96, confirming the ellipsis division export quirk.

@@ -2,6 +2,16 @@ housing-llm: a ~260K-parameter chat transformer compiled to HTSW.
 300 functions (292 model functions, including 3 batched dispatchers, + 8 chat
 helpers), ONE menu, ONE command. No event handlers.
 
+LIVE VALIDATION: PASSED IN GUH, 2026-10-22
+
+IMPORT verified /llm -> New Chat -> "Choose words, then Send." -> keypad words
+do, you, like, cats, ? -> Send. The reply was exactly:
+  i enjoy them , they make me feel happy .
+It streamed from 07:22:29 to 07:27:15 UTC, one word every roughly 20-40 seconds.
+This used the 800cbe8 source build after live import repairs and a full
+300-function audit with serial exports on HTSW v1.3.7. Merging feat/chat-ui
+remains Callan's decision.
+
 KEYPAD CHAT
 
 Teams T1..T10 and V must already exist. Import house/import.json and retain the
@@ -11,7 +21,8 @@ them from guh. The remaining menu is "LLM Keypad".
 
 Players: /llm -> New Chat. Wait for "Choose words, then Send." Click letters to
 narrow the seven suggestions, then click a word on the bottom row to add it.
-Accepted words appear in chat. Wait for processing before selecting another.
+Accepted words appear in chat. Each word takes about 30 seconds to process;
+the keypad responds "Please wait" during that time. Wait before selecting another.
 Backspace removes a letter; Clear letters clears the current prefix (shown on
 that button). These do not undo accepted words. Send prints the full reply,
 one word per line. There is no free-text box or multi-turn history.
@@ -33,10 +44,11 @@ allow players to cancel one another; use the house's access rules if needed.
 Questions allow 16 words/punctuation marks, leaving room in the 48-token context.
 The conservative batch size takes about 29 seconds per model token at 20 ticks/s:
 New Chat takes about one minute; replies take roughly 29 seconds per output word.
-Server load can make this longer. This is intended for live validation;
-the server's actual execution ceiling has not yet been measured.
+The successful live run took roughly 20-40 seconds between output words.
+Server load can make this longer. The server's actual execution ceiling has
+not been measured; the current setting has passed the live example.
 
-LIVE FAILURE AND RECOVERY
+IMPORT HISTORY AND RECOVERY
 
 IMPORT verified Init alone succeeds, but the old Run0 alone fails with Housing's
 generic execution error. That locates the failure in the model pass, rather than
@@ -77,15 +89,17 @@ Internal tensor names, holder assignment, math and call order are unchanged.
 Both compiler reads and writes use the same aliases. Unexpected suspicious names
 and alias collisions fail the build; the keypad generator screens HTSL keys too.
 
-Import ONLY these 19 functions from the name-fix build:
+The 800cbe8 name fix changed these 19 functions (already imported into guh):
 F015 F016 F062 F063 F111 F112 F113 F158 F159 F160 F161 F167 F168
 F193 F194 F195 F198 F199 F200
-Then export them back and verify the exact keys before a fresh New Chat.
-F028, Chat Next, the keypad and all other executable files are byte-identical.
+IMPORT exported them back and verified the replacement keys.
+F028, Chat Next, the keypad and all other executable files were byte-identical.
 No extra functions, actions or logical variables are added.
 
-Before starting a fresh chat, stop old work by clearing global ui_owner. Remove
-obsolete model keys if present: T4 n16/n19; T8 n160..n169 and n190..n199. Retained
+Before replacing functions, stop old work by clearing global ui_owner. Optional
+cleanup: remove obsolete model keys if present, T4 n16/n19 and T8 n160..n169,
+n190..n199. These have NOT been cleaned up in guh; the live test passed with
+them left as-is. Cleanup is not required to use New Chat. Retained
 old keys consume storage; keeping all 20 on T8 would consume the compiler's
 entire 160-byte margin once the replacements are written. Delete existing keys
 through the variable editor if their names cannot be entered in an unset action.
@@ -102,14 +116,22 @@ t = constant actions. Inspect the actual editors to distinguish bad writes
 from bad exports: F193 conditional 15 THEN action 6; F195 conditional 10 ELSE
 action 19 (all positions one-based). IMPORT confirmed both wrong actions in
 the editor and repaired them to Player, c, Increment, %var.player/t 0%,
-Automatic Unset off. Fresh full exports still need to confirm both repairs.
+Automatic Unset off; re-export confirmed the repairs.
 
-After LG's deploy GO, verify those actions directly, then repair just the two
-confirmed mistakes through a fresh live scan and targeted import or editor
-changes. Re-export to verify. Deleting/recreating entire functions is a fallback,
-not the first repair; it repeats thousands of writes through the same importer.
-Audit all 300 functions before relying on the model. Unchanged, already-verified
-exports can be reused. Do not treat a successful import status as a full read-back.
+The completed 300-function audit used serial exports on HTSW v1.3.7. It found
+10 additional damaged accumulation steps from the 2026-10-19 Cacti import:
+F040 (2), F092, F100, F119 (2), F135, F136, F221 and F225. Each had a copied
+action in place of c += t. IMPORT repaired those actions in the editor and
+re-exported the affected functions; they now match 800cbe8 exactly. These were
+live import repairs, not changes to the repository's calculation code.
+
+Earlier exports had reader errors: missing variable fields, dropped conditions
+and missing actions. Direct editor checks showed correct live content at those
+locations. The final audit's remaining flags were print-format differences:
+division spelling; genuinely empty IF branches in F030/F238/F255, empty in both
+source and house; and UI/dispatcher quoting and false flags. IMPORT reviewed
+these before the successful live test. A raw mismatch is not proof of house
+damage, and successful import status alone is not a complete read-back check.
 IMPORT inspected F028 conditional 23 ELSE action 14 under HTSW v1.3.5:
 Player, ss, Divide, 96. This confirms the …/= export spelling represents Divide
 there. The same spelling-only difference can now be accepted explicitly by the
@@ -128,6 +150,10 @@ reports division_accepted separately from exact, and records that choice in JSON
 Values, other operations and text are not normalized. Exit 0 requires all 300
 functions to be exact or explicitly accepted division-only matches; exit 1 means
 incomplete or unresolved. This checks files, not whether the exporter read correctly.
+The tool also reports recognized missing-key note/action pairs as unreadable,
+counts them, and lists compact locations for additional differences. Such reader
+gaps and print-format differences beyond the division flag still require review;
+the successful live test does not mean this strict byte-comparison tool exits 0.
 
 The five-call batching update changed ONLY Run0, Run1 and Run0_1. Keep Chat Next's
 installed clock. IMPORT reports HTSW v1.3.3 fixes the previous repeat-interval

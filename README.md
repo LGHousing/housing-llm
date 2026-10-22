@@ -5,6 +5,11 @@ Hypixel Housing code. Trained on an M5, quantized to exact integer math, compile
 to HTSL, and proven bit-exact against the Python integer reference in the HTSW
 simulator on 20/20 conversations (2026-10-02). Spec and ledger: `TASK.md`.
 
+**Live keypad chat verified in guh on 2026-10-22.** IMPORT used `/llm` →
+**New Chat** → `do you like cats ?` → **Send**, and received exactly
+`i enjoy them , they make me feel happy .` The reply streamed from
+07:22:29 to 07:27:15 UTC after the live import was audited and repaired.
+
 ## What to import
 
 | Folder | What | Functions |
@@ -16,8 +21,10 @@ Both pass `htsw check`.
 
 `house/` setup: create teams `T1`..`T10` and `V` before use. Players open `/llm`,
 click **New Chat**, click letters on the single keypad, select a suggested word,
-then click **Send**. Accepted words appear in chat; the answer
-prints automatically. Backspace and Clear letters change the current prefix.
+then click **Send**. Each selected word takes about **30 seconds** to process;
+the keypad says **Please wait** during that time. Accepted words appear in chat;
+the answer prints automatically, with roughly 20–40 seconds between output words
+in the live test. Backspace and Clear letters change the current prefix.
 One player can chat at a time, with up to 16 input words/punctuation marks.
 **End Chat** releases an unfinished question. See `house/README.txt` for setup,
 recovery and import notes, limits, and the manual model interface.
@@ -35,9 +42,9 @@ Letter buttons use light-blue wool named A–Z; suggestion buttons show only the
 The compiler screens variable names for common filter risks. IMPORT confirmed
 Housing blocks `n19` and silently retains the default `Kills`; the build now
 uses `norm19` and neutral names for 21 similar keys. See `house/README.txt` for
-the exact functions to repair and obsolete-key cleanup.
-IMPORT verified that variable item names refresh in-game. The newly split calculation
-still needs a live smoke test. Custom skull spawning failed live, so the keypad
+the import repair history and optional obsolete-key cleanup.
+IMPORT verified that variable item names refresh in-game and the complete keypad
+conversation succeeds. Custom skull spawning failed live, so the keypad
 uses ordinary named blocks; letters appear in their hover names. Regenerate with
 `python3 ref/build_chat.py` after building a matching model/vocabulary.
 
